@@ -63,9 +63,10 @@ if (!gem) { canvas.style.display = 'none'; document.documentElement.classList.ad
 
 // положение кристалла на первом экране и куда он уходит при прокрутке (доли половины кадра).
 // На телефоне кристалл над «ГРАНИ» (DIZAJN 5): под него оставлен верх первого экрана, см. glavnaya.css
+// кристалл на главной на 18 % меньше прежнего (Саша, 28.10): было s 0.4 / 0.26 и 0.86 / 0.6
 const POS = phone
-  ? { hero: { x: 0.14, y: 0.6, s: 0.4 }, away: { x: 0.5, y: 0.95, s: 0.26 } }
-  : { hero: { x: 0.5, y: 0.27, s: 0.86 }, away: { x: 0.3, y: 0.15, s: 0.6 } };
+  ? { hero: { x: 0.14, y: 0.6, s: 0.33 }, away: { x: 0.5, y: 0.95, s: 0.21 } }
+  : { hero: { x: 0.5, y: 0.27, s: 0.7 }, away: { x: 0.3, y: 0.15, s: 0.49 } };
 const lerp = (a, b, t) => a + (b - a) * t;
 const st = { hero: 0, out: 0 };
 function updateGem() {

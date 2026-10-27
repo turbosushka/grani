@@ -21,8 +21,8 @@ export const PRESETS = {
   b: { cut: 1, n: 8, hw: 1.88, crown: 0.1, pav: 0.77, frost: 0, tone: 1, sat: 0.5, gloss: 0, speed: 0.22 },
   c: { cut: 1, n: 8, hw: 1.7, crown: 0.09, pav: 0.56, frost: 0.9, tone: 0, sat: 0.05, gloss: 0, speed: 0.22 },
   mid: { cut: 1, n: 7, hw: 1.25, crown: 0.1, pav: 0.76, frost: 0, tone: 0.5, sat: 0.25, gloss: 0, speed: 0.22 },
-  // выбор Саши 27.10 в конструкторе: kristall.html?k=0,7,1.22,0.09,0.76,0.06,0.21,0.27,0.16,0.52
-  sasha: { cut: 0, n: 7, hw: 1.22, crown: 0.09, pav: 0.76, frost: 0.06, tone: 0.21, sat: 0.27, gloss: 0.16, speed: 0.52 },
+  // выбор Саши 28.10 в конструкторе: kristall.html?k=1,7,1.03,0.09,0.79,0,0.5,0.25,0,0.22 (первый был 0,7,1.22,0.09,0.76,0.06,0.21,0.27,0.16,0.52)
+  sasha: { cut: 1, n: 7, hw: 1.03, crown: 0.09, pav: 0.79, frost: 0, tone: 0.5, sat: 0.25, gloss: 0, speed: 0.22 },
 };
 const RANGE = { cut: [0, 1], n: [5, 12], hw: [0.5, 2.2], crown: [0.04, 0.4], pav: [0.3, 0.9] };
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
