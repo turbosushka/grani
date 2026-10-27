@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Место · ГРАНИ</title>
+<meta name="description" content="ГРАНИ. Пять вилл из стекла и камня на мысе Светлом. Демо-проект для портфолио.">
+<meta name="theme-color" content="#F4F2ED">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F4F2ED'/%3E%3Cpath d='M16 4 27 12 23 27H9L5 12z' fill='none' stroke='%239C7C4D' stroke-width='1.6'/%3E%3Cpath d='M5 12h22M16 4 12 12l4 15 4-15z' fill='none' stroke='%239C7C4D' stroke-width='1'/%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/forum-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/ysabeau-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/pages/mesto.css">
+<script src="assets/js/head.js"></script>
+</head>
+<body data-page="mesto">
+
+<div class="veil" aria-hidden="true"><div class="veil__word"><span>Г</span><span>Р</span><span>А</span><span>Н</span><span>И</span></div><div class="veil__bar"><i></i></div></div>
+
+<header class="hdr">
+  <a class="hdr__logo" href="index.html" aria-label="ГРАНИ, на главную">ГРАНИ</a>
+  <nav class="hdr__nav" aria-label="Разделы">
+    <a href="index.html">Главная</a>
+    <a href="arhitektura.html">Архитектура</a>
+    <a href="villy.html">Виллы</a>
+    <a href="mesto.html" aria-current="page">Место<i class="hdr__mark" aria-hidden="true"></i></a>
+    <a href="klub.html">Клуб</a>
+  </nav>
+  <a class="btn btn--line hdr__cta" href="pokaz.html">Частный показ</a>
+  <button class="hdr__burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="curtain"><i></i><i></i></button>
+</header>
+
+<div class="curtain" id="curtain" hidden>
+  <nav aria-label="Листы альбома">
+    <ol class="curtain__list">
+      <li><a href="index.html"><i>01</i>Главная</a></li>
+      <li><a href="arhitektura.html"><i>02</i>Архитектура</a></li>
+      <li><a href="villy.html"><i>03</i>Виллы</a>
+        <div class="curtain__villas"><a href="villa.html?v=kvarc"><i>04.1</i>Кварц</a><a href="villa.html?v=berill"><i>04.2</i>Берилл</a><a href="villa.html?v=topaz"><i>04.3</i>Топаз</a><a href="villa.html?v=opal"><i>04.4</i>Опал</a><a href="villa.html?v=agat"><i>04.5</i>Агат</a></div>
+      </li>
+      <li><a href="mesto.html" aria-current="page"><i>05</i>Место</a></li>
+      <li><a href="klub.html"><i>06</i>Клуб</a></li>
+      <li><a href="pokaz.html"><i>07</i>Частный показ</a></li>
+    </ol>
+  </nav>
+  <p class="curtain__foot cap">Мыс Светлый · показы по записи</p>
+</div>
+
+<main id="top">
+<!-- Экран 1. Вода с трёх сторон (DIZAJN 3.5): табличка листа и видео тумана из v1 со сценой открытия -->
+<section class="plate wrap" id="voda">
+  <div class="grid plate__top">
+    <h1 class="d1 plate__title">Вода с&nbsp;трёх сторон</h1>
+    <p class="lead plate__lead">Западные террасы смотрят на открытое озеро. До другого берега четыре километра.</p>
+    <dl class="stamp"><div><dt>Лист</dt><dd>05 из 07</dd></div><div><dt>Координаты</dt><dd>61°48′ с.&nbsp;ш. 34°18′ в.&nbsp;д.</dd></div><div><dt>До города</dt><dd>58 км</dd></div></dl>
+  </div>
+</section>
+<section class="mist" id="tuman">
+  <div class="mist__stage">
+    <div class="mist__media" id="mistMedia">
+      <video id="mist" muted playsinline loop preload="none" data-poster="assets/img/view.webp" data-poster-m="assets/img/view-m.webp" data-src="assets/video/mist.mp4" data-src-m="assets/video/mist-m.mp4" aria-hidden="true"></video>
+    </div>
+  </div>
+</section>
+
+<!-- Экран 2. Ситуационный план: дорога от города, засечки через 10 км, таблица расстояний -->
+<section class="sec wrap" id="doroga">
+  <div class="sec__head">
+    <h2 class="d2">Час от города</h2>
+    <p class="txt">Дорога идёт сосновым лесом до ворот посёлка. Внутри только пешие дорожки к&nbsp;домам и&nbsp;причалу, машины остаются у&nbsp;въезда.</p>
+  </div>
+  <div class="grid sit">
+    <figure class="sit__map sheet">
+      <svg id="sitSvg" viewBox="0 0 640 440" role="img" aria-label="Ситуационный план. Мыс Светлый в озере, лесная дорога до города 58 км, до аэропорта 74 км, до горнолыжного склона 22 км"></svg>
+    </figure>
+    <dl class="dist" id="dist">
+      <div data-r="voda"><dt>до воды</dt><dd>30 м</dd></div>
+      <div data-r="prichal"><dt>до причала пешком</dt><dd>4 мин</dd></div>
+      <div data-r="sklon"><dt>до горнолыжного склона</dt><dd>22 км</dd></div>
+      <div data-r="gorod"><dt>до города</dt><dd>58 км</dd></div>
+      <div data-r="aeroport"><dt>до аэропорта</dt><dd>74 км</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- Экран 3. Три стороны воды: круговая схема от центра мыса, азимуты из данных вилл -->
+<section class="sec wrap" id="storony">
+  <div class="sec__head">
+    <h2 class="d2">Озеро, острова и&nbsp;залив</h2>
+    <p class="txt">Виллы отмечены на кольце по направлению окон.</p>
+  </div>
+  <div class="grid sides">
+    <figure class="sides__fig sheet"><svg id="sidesSvg" viewBox="0 0 440 440" role="img" aria-label="Вода вокруг мыса. На западе открытое озеро, на севере острова, на востоке залив"></svg></figure>
+    <ol class="sides__list" id="sidesList"></ol>
+  </div>
+</section>
+
+<!-- Экран 4. Год на мысе: длина дня за год по формуле солнца, сезонные отметки -->
+<section class="sec wrap" id="god">
+  <div class="sec__head">
+    <h2 class="d2">Год на мысе</h2>
+    <p class="txt">День здесь длится от 5&nbsp;ч 14&nbsp;мин в&nbsp;декабре до 19&nbsp;ч 39&nbsp;мин в&nbsp;июне.</p>
+  </div>
+  <figure class="year" id="year">
+    <svg class="year__svg" id="yearSvg" role="img" aria-label="Длина дня на мысе за год"></svg>
+    <p class="year__tip ann" id="yearTip" aria-live="polite">&nbsp;</p>
+    <ol class="year__list" id="yearList"></ol>
+  </figure>
+</section>
+
+<nav class="next wrap" aria-label="Следующий лист"><a href="klub.html"><span class="d2">Лист 06. Клуб</span></a></nav>
+</main>
+
+<footer class="foot">
+  <div class="wrap grid foot__grid">
+    <div class="foot__brand">
+      <p class="foot__logo">ГРАНИ</p>
+      <p class="cap">Клубные виллы на мысе Светлом</p>
+    </div>
+    <nav class="foot__vedom" aria-labelledby="vedom-h">
+      <h2 class="foot__h" id="vedom-h">Ведомость листов</h2>
+      <p class="vedom__head tech" aria-hidden="true"><span>Лист</span><span>Наименование</span></p>
+      <ol class="vedom">
+        <li><a href="index.html"><i>01</i>Общие данные</a></li>
+        <li><a href="arhitektura.html"><i>02</i>Архитектура и материалы</a></li>
+        <li><a href="villy.html"><i>03</i>Генплан</a></li>
+        <li class="vedom__grp"><span><i>04</i>Виллы</span></li>
+        <li><a href="villa.html?v=kvarc"><i>04.1</i>Кварц</a></li>
+        <li><a href="villa.html?v=berill"><i>04.2</i>Берилл</a></li>
+        <li><a href="villa.html?v=topaz"><i>04.3</i>Топаз</a></li>
+        <li><a href="villa.html?v=opal"><i>04.4</i>Опал</a></li>
+        <li><a href="villa.html?v=agat"><i>04.5</i>Агат</a></li>
+        <li><a href="mesto.html" aria-current="page"><i>05</i>Место. Ситуационный план</a></li>
+        <li><a href="klub.html"><i>06</i>Клуб</a></li>
+        <li><a href="pokaz.html"><i>07</i>Частный показ</a></li>
+      </ol>
+    </nav>
+    <dl class="foot__who">
+      <div><dt>Девелопер</dt><dd>«Северный камень»</dd></div>
+      <div><dt>Архитектура</dt><dd>Бюро «Линия воды», Вера Ланская</dd></div>
+    </dl>
+  </div>
+  <p class="wrap foot__demo cap">Демонстрационный проект. Резиденция ГРАНИ вымышлена, сайт создан для портфолио. Планировки, цены, локация и контакты условны.</p>
+</footer>
+
+<script src="assets/js/gsap.min.js" defer></script>
+<script src="assets/js/ScrollTrigger.min.js" defer></script>
+<script src="assets/js/lenis.min.js" defer></script>
+<script type="module" src="assets/js/pages/mesto.js"></script>
+</body>
+</html>

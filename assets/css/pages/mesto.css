@@ -1,0 +1,105 @@
+/* Лист 05, Место (mesto.html). Подключается после base.css.
+   Экраны: 1 табличка и туман v1 · 2 ситуационный план и расстояния · 3 три стороны воды · 4 год на мысе. */
+
+/* ---------- экран 1: туман v1 со сценой открытия ---------- */
+.mist{padding-top:clamp(32px,4vw,56px)}
+.mist__stage{position:relative;height:calc(100vh - var(--hdr));height:calc(100svh - var(--hdr));min-height:480px;overflow:hidden}
+.mist__media{position:absolute;inset:0;clip-path:inset(6% 5.6vw 6% 5.6vw);background:#DCE2DF center/cover no-repeat}
+.mist__media video{width:100%;height:100%;object-fit:cover;object-position:50% 60%}
+
+/* ---------- экран 2: ситуационный план ---------- */
+.sit{align-items:start;row-gap:32px}
+.sit__map{grid-column:1/9;padding:16px}
+.sit__map svg{display:block;width:100%;height:auto}
+.dist{grid-column:9/13;border-top:1px solid var(--ink-2);position:sticky;top:calc(var(--hdr) + 32px)}
+.dist>div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 8px 14px 0;border-bottom:1px solid var(--line);transition:background-color .2s}
+.dist>div[data-r]{cursor:default}
+.dist>div.is-on{background:var(--sel)}
+.dist dt{font-size:15px;color:var(--ink-2)}
+.dist dd{font:italic 500 1.25rem/1 var(--ff-t);color:var(--ink);white-space:nowrap}
+/* надписи и линии плана */
+.st-water{fill:var(--water)}
+.st-shore{fill:none;stroke:var(--ink-2);stroke-width:.9}
+.st-isl{fill:var(--bg);stroke:var(--ink-2);stroke-width:.7}
+.st-iso{fill:none;stroke:var(--glass);stroke-width:.6;stroke-dasharray:4 4}
+.st-road{fill:none;stroke:var(--bronze);stroke-width:1.6;stroke-dasharray:6 5}
+.st-road--side{stroke-width:1.2;stroke-dasharray:3 4}
+.st-hl{fill:none;stroke:var(--bronze-ink);stroke-width:3;stroke-linecap:round;opacity:0;transition:opacity .25s}
+.st-hl.on{opacity:1}
+.st-tick{stroke:var(--ink);stroke-width:1.2}
+.st-km{font:italic 500 11px var(--ff-t);fill:var(--ink-2)}
+.st-name{font:400 22px var(--ff-d);letter-spacing:.2em;fill:var(--ink)}
+.st-sub{font:italic 500 12px var(--ff-t);fill:var(--ink-2)}
+.st-w{font:italic 500 12px var(--ff-t);fill:var(--glass-ink);letter-spacing:.06em}
+.st-pt{fill:var(--surface);stroke:var(--ink);stroke-width:1.2}
+.st-cape{fill:var(--bronze)}
+.st-hill{fill:none;stroke:var(--line-2);stroke-width:.8}
+.st-dot{fill:var(--bronze-ink)}
+.st-n{fill:var(--ink)}
+.st-tech{font:600 11px var(--ff-t);letter-spacing:.14em;fill:var(--ink-2)}
+.st-bar{stroke:var(--ink);stroke-width:.8}
+
+/* ---------- экран 3: три стороны воды ---------- */
+.sides{align-items:center;row-gap:32px}
+.sides__fig{grid-column:1/7;padding:16px}
+.sides__fig svg{display:block;width:100%;height:auto}
+.sides__list{grid-column:8/13;border-top:1px solid var(--ink-2)}
+.sides__list li{display:grid;grid-template-columns:96px 1fr;gap:4px 16px;padding:16px 0;border-bottom:1px solid var(--line)}
+.sides__list b{font:600 11px/1.6 var(--ff-t);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);grid-row:1/3}
+.sides__list .d3{font-size:1.5rem}
+.sides__list span:not(.d3){font:italic 500 13px/1.4 var(--ff-t);color:var(--ink-2)}
+.sd-sec{fill:var(--water);stroke:none}
+.sd-ring{fill:none;stroke:var(--ink-2);stroke-width:1}
+.sd-ring2{fill:none;stroke:var(--line-2);stroke-width:.7;stroke-dasharray:3 3}
+.sd-rad{stroke:var(--glass-ink);stroke-width:.8}
+.sd-tick{stroke:var(--line-2);stroke-width:.8}
+.sd-az{font:italic 500 12px var(--ff-t);fill:var(--glass-ink);text-anchor:middle;dominant-baseline:central}
+.sd-cmp{font:600 11px var(--ff-t);letter-spacing:.14em;fill:var(--ink-2);text-anchor:middle;dominant-baseline:central}
+.sd-lbl{font:400 19px var(--ff-d);fill:var(--ink);text-anchor:middle}
+.sd-v{fill:var(--bronze)}
+.sd-vt{font:italic 500 12px var(--ff-t);fill:var(--ink)}
+.sd-dim{stroke:var(--ink);stroke-width:.9}
+.sd-dimt{font:italic 500 12px var(--ff-t);fill:var(--ink)}
+.sd-c{fill:var(--ink)}
+
+/* ---------- экран 4: год на мысе ---------- */
+.year{position:relative;display:flex;flex-direction:column}
+.year__svg{display:block;width:100%;height:auto;overflow:visible;touch-action:pan-y}
+.year__tip{order:-1;min-height:1.4em;margin-bottom:10px;font-size:13px;text-align:right}
+.year__list{display:none}
+.year.is-num .year__list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px 32px;margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
+.year.is-num .year__list li{display:grid;grid-template-columns:24px 1fr;gap:8px;font-size:14px;line-height:1.45;color:var(--ink-2)}
+.year.is-num .year__list i{font:italic 600 12px/1.45 var(--ff-t);color:var(--bronze-ink)}
+.yr-fill{fill:rgba(156,124,77,.16)}
+.yr-line{fill:none;stroke:var(--bronze);stroke-width:1.4}
+.yr-grid{stroke:var(--line);stroke-width:1}
+.yr-axis{stroke:var(--ink-2);stroke-width:1}
+.yr-mt{font:italic 500 12px var(--ff-t);fill:var(--ink-2);text-anchor:middle}
+.yr-ht{font:italic 500 12px var(--ff-t);fill:var(--muted)}
+.yr-now{stroke:var(--ink);stroke-width:1}
+.yr-nowt{font:italic 600 12px var(--ff-t);fill:var(--ink)}
+.yr-ld{fill:none;stroke:var(--ink);stroke-width:.8}
+.yr-pt{fill:var(--surface);stroke:var(--ink);stroke-width:1}
+.yr-hov{stroke:var(--bronze-ink);stroke-width:1;stroke-dasharray:2 3;opacity:0}
+.yr-hovpt{fill:var(--bronze-ink);opacity:0}
+.year.is-hov .yr-hov,.year.is-hov .yr-hovpt{opacity:1}
+.yr-lab{font:italic 500 13px/1.35 var(--ff-t);color:var(--ink-2)}
+.yr-lab b{font:normal 600 11px/1 var(--ff-t);letter-spacing:.06em;color:var(--bronze-ink);display:block;margin-bottom:3px}
+.yr-num{font:italic 600 11px var(--ff-t);fill:var(--bronze-ink);text-anchor:middle;dominant-baseline:central}
+
+@media (max-width:980px){
+  .sit__map,.dist,.sides__fig,.sides__list{grid-column:1/-1}
+  .dist{position:static}
+}
+@media (max-width:760px){
+  .mist__stage{height:88svh}
+  .mist__media{clip-path:inset(4% 4% 4% 4%)}
+  .sit__map,.sides__fig{padding:8px;margin-inline:calc(var(--gut) * -1 + 4px)}
+  .sides__list li{grid-template-columns:76px 1fr}
+  /* на телефоне план и схема уменьшаются примерно вдвое, надписи крупнее, чтобы на экране было не меньше 11 px */
+  .st-sub,.st-w{font-size:16px}.st-km{font-size:16px}.st-name{font-size:26px}.st-tech{font-size:16px}
+  .sd-az,.sd-vt,.sd-dimt{font-size:15px}.sd-lbl{font-size:21px}.sd-cmp{font-size:15px}
+  .year__list{display:grid;gap:10px;margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
+  .year__list li{display:grid;grid-template-columns:24px 1fr;gap:8px;font-size:14px;line-height:1.45;color:var(--ink-2)}
+  .year__list i{font:italic 600 12px/1.45 var(--ff-t);color:var(--bronze-ink)}
+}

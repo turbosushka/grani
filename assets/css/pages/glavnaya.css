@@ -1,0 +1,141 @@
+/* Лист 01, главная (index.html). Подключается после base.css (и villy-genplan.css для генплана).
+   Экраны: 1 первый экран с кристаллом и дугой солнца · 2 свет по часам · пролёт в Кварц ·
+   3 генплан и экспликация · 4 вода с трёх сторон · 5 ведомость листов. */
+
+/* кристалл: холст на весь экран под страницей, положение задаёт pages/glavnaya.js */
+.gem{position:fixed;inset:0;width:100vw;height:100vh;height:100lvh;z-index:0;pointer-events:none;transition:opacity .6s}
+
+/* ---------- экран 1 ---------- */
+.hero{position:relative;min-height:calc(100vh - var(--hdr));min-height:calc(100svh - var(--hdr));display:flex;flex-direction:column;justify-content:flex-end;padding-top:clamp(40px,8vh,96px)}
+.hero__grid{align-items:end}
+.hero__text{grid-column:1/8}
+.hero__lead{margin-top:clamp(20px,3vw,32px)}
+.hero__cta{margin-top:clamp(12px,2vw,24px)}
+.hero__foot{margin-top:clamp(28px,5vh,56px);padding-bottom:clamp(28px,5vh,48px);align-items:end;row-gap:32px}
+.hero__chain{grid-column:1/10}
+.hero__foot .stamp{grid-column:10/13}
+/* дуга солнца под кристаллом */
+.sunarc{grid-column:8/13;align-self:end}
+.sunarc__svg{width:100%;height:auto;overflow:visible}
+.sunarc__now{margin-top:6px;font:italic 500 13px/1.35 var(--ff-t);color:var(--ink-2)}
+.sa-hor{stroke:var(--ink-2);stroke-width:1}
+.sa-tick{stroke:var(--line-2);stroke-width:1}
+.sa-tick--b{stroke:var(--ink-2)}
+.sa-cmp{font:600 11px/1 var(--ff-t);letter-spacing:.14em;fill:var(--muted);text-anchor:middle}
+.sa-arc{fill:none;stroke:var(--bronze);stroke-width:1.3}
+.sa-arc--night{stroke-dasharray:3 4}
+.sa-under{fill:rgba(156,124,77,.08)}
+.sa-t{font:italic 500 12.5px var(--ff-t);fill:var(--ink-2)}
+.sa-end{fill:var(--surface);stroke:var(--ink);stroke-width:1}
+.sa-sun{fill:var(--bronze)}
+.sa-ring{fill:none;stroke:var(--bronze);stroke-width:1}
+.sa-drop{stroke:var(--bronze);stroke-width:.8;stroke-dasharray:2 3}
+
+/* ---------- экран 2: свет по часам ---------- */
+.light{position:relative}
+.light__pin{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:calc(var(--hdr) + 32px) 0 32px;background:var(--bg)}
+.light__grid{align-items:center}
+.light__head{grid-column:1/5;display:grid;gap:24px;align-content:center}
+.light__link{justify-self:start}
+.light__stage{grid-column:5/13;min-width:0}
+.light__frame{position:relative;width:100%;height:min(calc((100vw - var(--gut) * 2) * .62 * .625),calc(100svh - var(--hdr) - 290px));min-height:280px;overflow:hidden;background:#D9D4CA}
+.light__frame picture{position:absolute;inset:0}
+.light__frame img{width:100%;height:100%;object-fit:cover}
+#lDen,#lVecher{opacity:0}
+.light__scale{margin-top:10px;cursor:default}
+.light__scale .tl__thumb{cursor:default}
+.light__leads{display:block;width:100%;height:18px;overflow:visible}
+.light__leads path{fill:none;stroke:var(--line-2);stroke-width:1}
+.light__leads path.on{stroke:var(--bronze)}
+.light__hours{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gap)}
+.light__hours li{display:grid;gap:6px;align-content:start;font-size:15px;line-height:1.5;color:var(--ink-2);opacity:.38;transition:opacity .5s var(--ease-out)}
+.light__hours li.is-on{opacity:1}
+.light__hours b{font:italic 500 13px/1 var(--ff-t);color:var(--bronze-ink)}
+
+/* ---------- пролёт ---------- */
+.fly{position:relative}
+.fly__pin{position:relative;height:100vh;height:100svh;display:flex;flex-direction:column;padding-top:var(--hdr);background:var(--bg)}
+.fly__frame{position:relative;flex:1;min-height:0;overflow:hidden;background:#C9CFCC}
+.fly__video{width:100%;height:100%;object-fit:cover;background:center/cover no-repeat}
+.fly__bar{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(251,250,247,.45)}
+.fly__bar i{position:absolute;inset:0;background:var(--bronze);transform:scaleX(0);transform-origin:left}
+.fly__cap{align-items:end;row-gap:12px;padding-top:22px;padding-bottom:26px}
+.fly__name{grid-column:1/4}
+.fly__line{grid-column:4/9;max-width:44ch}
+.fly__link{grid-column:9/13;justify-self:end}
+
+/* ---------- экран 3: генплан и экспликация ---------- */
+.gpl{align-items:start;row-gap:32px}
+.gpl__map{grid-column:1/8;padding:14px}
+.gpl__map svg{display:block;width:100%;aspect-ratio:4/3;height:auto}
+.gpl__tbl{grid-column:8/13;min-width:0}
+.expl{width:100%;border-collapse:collapse}
+.gpl__link{margin-top:24px}
+.expl th{font:600 11px/1.3 var(--ff-t);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:left;padding:0 8px 10px 0;border-bottom:1px solid var(--ink-2);white-space:nowrap}
+.expl td{padding:14px 8px 14px 0;border-bottom:1px solid var(--line);vertical-align:baseline;font-size:15px;color:var(--ink-2)}
+.expl .r{text-align:right;padding-right:16px}
+.expl td.r{font-variant-numeric:tabular-nums}
+.expl tbody tr{cursor:pointer;transition:background-color .2s}
+.expl tbody tr.is-on{background:var(--sel)}
+.expl__no{display:inline-grid;place-items:center;width:22px;height:22px;border:1px solid var(--ink-2);border-radius:50%;font:italic 500 12px/1 var(--ff-t);color:var(--ink-2)}
+.expl__name a{font:400 1.45rem/1 var(--ff-d);color:var(--ink)}
+.expl tr.is-on .expl__name a{color:var(--bronze-ink)}
+.expl__st{font-style:italic;color:var(--glass-ink)}
+.expl__st.is-res{color:var(--bronze-ink)}
+
+/* ---------- экран 4: вода с трёх сторон (сцена v1) ---------- */
+.view{position:relative;padding-top:var(--sec)}
+.view__stage{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden}
+.view__media{position:absolute;inset:0;clip-path:inset(10% 8% 10% 8%);background:#DCE2DF center/cover no-repeat}
+.view__media video{width:100%;height:100%;object-fit:cover;object-position:50% 60%}
+.view__text{position:absolute;left:0;right:0;top:clamp(110px,16vh,180px)}
+.view__title{font:400 clamp(3rem,8vw,8rem)/.92 var(--ff-d);color:var(--ink)}
+.view__foot{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px 40px;padding-top:40px}
+
+/* ---------- экран 5: ведомость листов крупно ---------- */
+.listy__h{margin-bottom:32px}
+.ledger{border-top:1px solid var(--ink-2)}
+.ledger a{display:grid;grid-template-columns:72px minmax(0,4fr) minmax(0,5fr) 120px;gap:var(--gap);align-items:center;padding:18px 0;border-bottom:1px solid var(--line);transition:background-color .25s}
+.ledger a:hover{background:var(--sel)}
+.ledger i{font:italic 500 15px/1 var(--ff-t);color:var(--muted);padding-left:4px}
+.ledger__name{font:400 clamp(1.6rem,2.4vw,2.3rem)/1.05 var(--ff-d);color:var(--ink);transition:color .25s}
+.ledger a:hover .ledger__name{color:var(--bronze-ink)}
+.ledger__line{color:var(--ink-2);font-size:16px;line-height:1.5;max-width:46ch}
+.ledger__img{width:120px;height:80px;object-fit:cover;display:block;border:1px solid var(--line)}
+
+@media (max-width:980px){
+  .hero__text,.hero__chain,.hero__foot .stamp,.sunarc{grid-column:1/-1}
+  .light__head,.light__stage{grid-column:1/-1}
+  .light__stage{margin-top:32px}
+  .gpl__map,.gpl__tbl{grid-column:1/-1}
+  .fly__name,.fly__line,.fly__link{grid-column:1/-1;justify-self:start}
+}
+@media (max-width:760px){
+  /* верх экрана под кристалл, дальше текст сверху вниз, а не прижат к низу */
+  .hero{justify-content:flex-start;padding-top:300px}
+  .sunarc{margin-top:28px}
+  .sunarc__now{font-size:13px}
+  .sa-t{font-size:14px}.sa-cmp{font-size:12px}
+  /* свет по часам без закрепления: кадр и шкала, которую тянут пальцем */
+  .light__pin{min-height:0;padding:var(--sec) 0 0}
+  .light__frame{height:auto;aspect-ratio:4/5;min-height:0}
+  .light__scale,.light__scale .tl__thumb{cursor:pointer}
+  .light__leads{display:none}
+  .light__hours{grid-template-columns:1fr}
+  .light__hours li{display:none;opacity:1}
+  .light__hours li.is-on{display:grid}
+  .fly__cap{padding-top:16px;padding-bottom:20px;row-gap:8px}
+  .fly__name{font-size:1.8rem}
+  .fly__line{font-size:1rem}
+  .gpl__map{padding:8px}
+  .gpl__map svg{aspect-ratio:1/1}
+  .expl th:nth-child(5),.expl td:nth-child(5),.expl th:nth-child(4),.expl td:nth-child(4){display:none}
+  .expl__name a{font-size:1.3rem}
+  .view__stage{height:88svh}
+  .view__media{clip-path:inset(6% 4% 6% 4%)}
+  .ledger a{grid-template-columns:72px minmax(0,1fr);grid-template-rows:auto auto;column-gap:16px;row-gap:6px;padding:16px 0}
+  .ledger__img{grid-column:1;grid-row:1/3;width:72px;height:48px;order:-1}
+  .ledger i{display:none}
+  .ledger__name{grid-column:2;font-size:1.4rem}
+  .ledger__line{grid-column:2;font-size:15px}
+}

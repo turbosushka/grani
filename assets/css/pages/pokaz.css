@@ -1,0 +1,98 @@
+/* Лист 07, частный показ (pokaz.html). Подключается после base.css.
+   Расклад DIZAJN 3.7: текст и контакты в колонках 1–4, лист с календарём и формой в 5–12.
+   Календарь 21 день с завтрашнего, свет табами, панель солнца выбранного дня, форма. */
+.pokaz{padding-top:clamp(48px,6vw,88px);align-items:start;row-gap:48px}
+.pokaz__text{grid-column:1/5;display:grid;gap:28px;align-content:start;position:sticky;top:calc(var(--hdr) + 32px)}
+.pokaz__text .d1{font-size:clamp(3.4rem,5.2vw,5.4rem)}
+.pokaz__text .stamp{justify-self:start}
+.pokaz__contacts>div{display:grid;grid-template-columns:96px 1fr;padding:12px 0;border-top:1px solid var(--line)}
+.pokaz__contacts dt{font-size:14px;color:var(--muted);padding-top:2px}
+.pokaz__contacts a{border-bottom:1px solid var(--line-2)}
+.pokaz__sheet{grid-column:5/13;display:grid;gap:36px;padding:clamp(24px,3vw,40px)}
+
+/* ---------- календарь ---------- */
+.cal__head{display:grid;gap:8px}
+.cal__months{margin-top:22px;color:var(--muted)}
+.cal__dow,.cal__grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.cal__dow{margin-top:10px;padding-bottom:8px;border-bottom:1px solid var(--ink-2)}
+.cal__dow span{padding-left:10px}
+.cal__grid{border-left:1px solid var(--line)}
+.day{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:84px;padding:10px 10px 14px;border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:transparent;color:var(--ink);text-align:left;cursor:pointer;transition:background-color .25s var(--ease-out),color .25s var(--ease-out)}
+.day__n{font:400 1.6rem/1 var(--ff-d)}
+.day__m{position:absolute;top:10px;right:8px;font:italic 500 11px/1 var(--ff-t);color:var(--muted)}
+.day__s{font:italic 500 11px/1.2 var(--ff-t);color:var(--ink-2)}
+/* черта длины дня: доля суток */
+.day__len{position:absolute;left:10px;bottom:8px;height:1px;width:calc((100% - 20px) * var(--len,0));background:var(--bronze)}
+.day:hover:not(:disabled){background:var(--sel)}
+.day[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.day[aria-pressed="true"] .day__s,.day[aria-pressed="true"] .day__m{color:var(--line)}
+.day[aria-pressed="true"] .day__len{background:var(--line-2)}
+.day:disabled{cursor:default;color:var(--line-2)}
+.day:disabled .day__n{color:var(--line-2)}
+.day:focus-visible{outline:1.5px solid var(--bronze);outline-offset:-3px}
+.cal__legend{margin-top:12px}
+.cal__err{margin-top:10px;font-size:14px;color:#8A3E30}
+
+/* ---------- свет: табы с бронзовой чертой ---------- */
+.light-pick{display:grid;gap:10px}
+.light-pick__h{font-size:14px;color:var(--ink-2)}
+.light-pick__tabs{display:flex;gap:clamp(20px,3vw,36px);border-bottom:1px solid var(--line)}
+.light-pick__tabs button{position:relative;min-height:44px;padding:8px 0 12px;border:0;background:none;font:500 1rem/1 var(--ff-t);color:var(--muted);cursor:pointer;transition:color .25s}
+.light-pick__tabs button:hover{color:var(--ink)}
+.light-pick__tabs button::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--bronze);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease-out)}
+.light-pick__tabs button[aria-checked="true"]{color:var(--ink)}
+.light-pick__tabs button[aria-checked="true"]::after{transform:scaleX(1)}
+
+/* ---------- панель солнца ---------- */
+.sunpanel{display:grid;gap:14px}
+.sunpanel__svg{width:100%;height:auto;overflow:visible}
+.sunpanel__line{font:400 clamp(1.08rem,1.25vw,1.22rem)/1.5 var(--ff-t);color:var(--ink);min-height:3em}
+.sp-hor{stroke:var(--ink-2);stroke-width:1}
+.sp-tick{stroke:var(--line-2);stroke-width:1}
+.sp-tick--b{stroke:var(--ink-2)}
+.sp-hour{font:italic 500 12px var(--ff-t);fill:var(--muted);text-anchor:middle}
+.sp-arc{fill:none;stroke:var(--bronze);stroke-width:1.2}
+.sp-arc--empty{stroke:var(--line-2);stroke-dasharray:3 4}
+.sp-under{fill:rgba(156,124,77,.10)}
+.sp-win{fill:none;stroke:var(--bronze-ink);stroke-width:3.2;stroke-linecap:round}
+.sp-winfill{fill:rgba(156,124,77,.20)}
+.sp-wl{stroke:var(--bronze-ink);stroke-width:.8;stroke-dasharray:2 3}
+.sp-dot{fill:var(--surface);stroke:var(--ink);stroke-width:1}
+.sp-t{font:italic 500 13px var(--ff-t);fill:var(--ink-2)}
+.sp-t--b{fill:var(--bronze-ink)}
+.sp-gate{fill:var(--ink)}
+
+/* ---------- форма ---------- */
+.form{position:relative;display:grid;gap:22px;padding-top:32px;border-top:1px solid var(--line)}
+.form__row{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.field{display:grid;gap:8px;border:0;margin:0;padding:0;min-width:0;align-content:start}
+.field label{font-size:14px;color:var(--ink-2);padding:0}
+.field input,.select select{width:100%;min-height:50px;padding:0 14px;border:1px solid var(--line-2);border-radius:0;background:var(--bg);font-size:1.05rem;color:var(--ink);caret-color:var(--bronze);-webkit-appearance:none;appearance:none;transition:border-color .3s,box-shadow .3s}
+.field input::placeholder{color:var(--muted)}
+.field input:focus,.select select:focus{outline:none;border-color:var(--bronze);box-shadow:0 0 0 3px rgba(156,124,77,.16)}
+.field.is-bad input{border-color:#9B4A3A}
+.field__err{display:none;font-size:14px;color:#8A3E30}
+.field.is-bad .field__err{display:block}
+.select{position:relative}
+.select::after{content:"";position:absolute;right:18px;top:50%;width:8px;height:8px;border-right:1px solid var(--ink-2);border-bottom:1px solid var(--ink-2);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+.form__send{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;margin-top:6px}
+.form__done{position:absolute;inset:0;background:var(--surface);display:flex;flex-direction:column;justify-content:center;gap:14px;padding-top:32px}
+.form__done[hidden]{display:none}
+.form__done-title{font:400 clamp(2.2rem,3.4vw,3.2rem)/1 var(--ff-d)}
+.form__done p:not(.form__done-title):not(.cap){max-width:52ch;color:var(--ink-2)}
+
+@media (max-width:980px){
+  .pokaz__text,.pokaz__sheet{grid-column:1/-1}
+  .pokaz__text{position:static}
+}
+@media (max-width:760px){
+  .pokaz__sheet{padding:20px 14px;gap:32px}
+  .cal__dow span{padding-left:0;text-align:center}
+  .day{min-height:62px;padding:7px 2px 12px;align-items:center;gap:3px}
+  .day__n{font-size:1.35rem}
+  .day__m{display:none}
+  .day__len{left:4px;width:calc((100% - 8px) * var(--len,0))}
+  .form__row{grid-template-columns:1fr}
+  .sp-hour{font-size:13px}
+  .sp-t{font-size:13px}
+}

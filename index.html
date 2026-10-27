@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ГРАНИ · клубные виллы у воды</title>
+<meta name="description" content="ГРАНИ. Пять вилл из стекла и камня на мысе Светлом. Демо-проект для портфолио.">
+<meta name="theme-color" content="#F4F2ED">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F4F2ED'/%3E%3Cpath d='M16 4 27 12 23 27H9L5 12z' fill='none' stroke='%239C7C4D' stroke-width='1.6'/%3E%3Cpath d='M5 12h22M16 4 12 12l4 15 4-15z' fill='none' stroke='%239C7C4D' stroke-width='1'/%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/forum-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/ysabeau-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/pages/villy-genplan.css">
+<link rel="stylesheet" href="assets/css/pages/glavnaya.css">
+<link rel="stylesheet" href="assets/css/pages/svet.css">
+<script src="assets/js/head.js"></script>
+<script type="importmap">{"imports":{"three":"./assets/js/three.module.min.js"}}</script>
+</head>
+<body data-page="glavnaya">
+
+<div class="veil" aria-hidden="true"><div class="veil__word"><span>Г</span><span>Р</span><span>А</span><span>Н</span><span>И</span></div><div class="veil__bar"><i></i></div></div>
+
+<canvas id="gem" class="gem" aria-hidden="true"></canvas>
+<header class="hdr">
+  <a class="hdr__logo" href="index.html" aria-label="ГРАНИ, на главную">ГРАНИ</a>
+  <nav class="hdr__nav" aria-label="Разделы">
+    <a href="index.html" aria-current="page">Главная<i class="hdr__mark" aria-hidden="true"></i></a>
+    <a href="arhitektura.html">Архитектура</a>
+    <a href="villy.html">Виллы</a>
+    <a href="mesto.html">Место</a>
+    <a href="klub.html">Клуб</a>
+  </nav>
+  <a class="btn btn--line hdr__cta" href="pokaz.html">Частный показ</a>
+  <button class="hdr__burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="curtain"><i></i><i></i></button>
+</header>
+
+<div class="curtain" id="curtain" hidden>
+  <nav aria-label="Листы альбома">
+    <ol class="curtain__list">
+      <li><a href="index.html" aria-current="page"><i>01</i>Главная</a></li>
+      <li><a href="arhitektura.html"><i>02</i>Архитектура</a></li>
+      <li><a href="villy.html"><i>03</i>Виллы</a>
+        <div class="curtain__villas"><a href="villa.html?v=kvarc"><i>04.1</i>Кварц</a><a href="villa.html?v=berill"><i>04.2</i>Берилл</a><a href="villa.html?v=topaz"><i>04.3</i>Топаз</a><a href="villa.html?v=opal"><i>04.4</i>Опал</a><a href="villa.html?v=agat"><i>04.5</i>Агат</a></div>
+      </li>
+      <li><a href="mesto.html"><i>05</i>Место</a></li>
+      <li><a href="klub.html"><i>06</i>Клуб</a></li>
+      <li><a href="pokaz.html"><i>07</i>Частный показ</a></li>
+    </ol>
+  </nav>
+  <p class="curtain__foot cap">Мыс Светлый · показы по записи</p>
+</div>
+
+<main id="top">
+<!-- Экран 1. Живой первый экран (DIZAJN 3.1): «ГРАНИ», кристалл, дуга солнца на сегодня -->
+<section class="hero" id="hero">
+  <div class="wrap grid hero__grid">
+    <div class="hero__text">
+      <h1 class="brand hero__title"><span class="lm"><span>ГРАНИ</span></span></h1>
+      <p class="lead hero__lead">Пять вилл из стекла и камня на мысе Светлом. Сосны, гранит и&nbsp;тихая вода вокруг.</p>
+      <a class="tick-link hero__cta" href="villy.html">Выбрать виллу</a>
+    </div>
+    <!-- дуга солнца над мысом сегодня: по горизонтали азимут, точка солнца сейчас, раз в минуту -->
+    <figure class="sunarc" id="sunArc">
+      <svg class="sunarc__svg" id="sunArcSvg" viewBox="0 0 480 150" role="img" aria-labelledby="sunArcNow"></svg>
+      <figcaption class="sunarc__now" id="sunArcNow">&nbsp;</figcaption>
+    </figure>
+  </div>
+  <div class="wrap grid hero__foot">
+    <dl class="chain hero__chain">
+      <div><dt>вилл на мысе</dt><dd>5</dd></div>
+      <div><dt>до потолка в гостиной</dt><dd>4,2<i>м</i></dd></div>
+      <div><dt>фасада из стекла</dt><dd>72<i>%</i></dd></div>
+      <div><dt>от террасы до воды</dt><dd>30<i>м</i></dd></div>
+    </dl>
+    <dl class="stamp"><div><dt>Лист</dt><dd>01 из 07</dd></div><div><dt>Координаты</dt><dd>61°48′ с.&nbsp;ш. 34°18′ в.&nbsp;д.</dd></div><div><dt>Закат сегодня</dt><dd id="stampSet">&nbsp;</dd></div></dl>
+  </div>
+</section>
+
+<!-- Экран 2. Свет по часам: одна гостиная в трёх светах, час идёт по прокрутке (на телефоне шкалу тянут пальцем) -->
+<section class="light" id="svet">
+  <div class="light__pin">
+    <div class="wrap grid light__grid">
+      <div class="light__head">
+        <h2 class="d2">Пять граней одного мыса</h2>
+        <p class="txt">Мы не рисовали коробку с окнами. Мы гранили дом, как камень. Каждая грань повёрнута к своему часу, и за день свет обходит все комнаты.</p>
+        <a class="tick-link light__link" href="arhitektura.html">Лист 02. Архитектура и материалы</a>
+      </div>
+      <div class="light__stage">
+        <div class="light__frame" id="lFrame">
+          <picture><source media="(max-width: 760px)" srcset="assets/img/arhitektura/time-utro-m.webp" width="880" height="1100"><img src="assets/img/arhitektura/time-utro.webp" width="1920" height="1270" alt="Гостиная со стеклом во всю стену, за окном озеро и острова" loading="lazy" decoding="async"></picture>
+          <picture><source media="(max-width: 760px)" srcset="assets/img/arhitektura/time-den-m.webp" width="880" height="1100"><img id="lDen" src="assets/img/arhitektura/time-den.webp" width="1920" height="1270" alt="" loading="lazy" decoding="async"></picture>
+          <picture><source media="(max-width: 760px)" srcset="assets/img/arhitektura/time-vecher-m.webp" width="880" height="1100"><img id="lVecher" src="assets/img/arhitektura/time-vecher.webp" width="1920" height="1270" alt="" loading="lazy" decoding="async"></picture>
+        </div>
+        <div class="tl__scale light__scale" id="lScale">
+          <div class="tl__ticks" id="lTicks" aria-hidden="true"></div>
+          <div class="tl__thumb" id="lThumb" aria-label="Время суток" aria-valuemin="360" aria-valuemax="1320" aria-valuenow="460" aria-valuetext="07:40, утро"><i></i></div>
+        </div>
+        <svg class="light__leads" id="lLeads" aria-hidden="true"></svg>
+        <ol class="light__hours" id="lHours" aria-label="Свет в течение дня">
+          <li class="is-on"><b>07:40</b><span>Утро. Солнце ещё низко и&nbsp;кладёт на пол длинные тёплые полосы. Над водой держится туман.</span></li>
+          <li><b>13:00</b><span>День. Высокое солнце берёт на себя кровля, в&nbsp;комнате ровный мягкий свет без бликов.</span></li>
+          <li><b>20:15</b><span>Вечер. Солнце садится между островами прямо напротив окна. Камень пола отдаёт тепло до темноты.</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Пролёт: с воды внутрь виллы «Кварц», видео перематывается прокруткой -->
+<section class="fly" id="prolet">
+  <div class="fly__pin">
+    <div class="fly__frame">
+      <video class="fly__video" id="flyV" muted playsinline preload="none" disablepictureinpicture aria-label="Вилла «Кварц» на рассвете. Камера подлетает с воды и входит в кухню-столовую" data-src="assets/video/prolet.mp4" data-src-m="assets/video/prolet-m.mp4" data-poster="assets/video/prolet-poster.webp" data-poster-m="assets/video/prolet-poster-m.webp"></video>
+      <div class="fly__bar" aria-hidden="true"><i id="flyBar"></i></div>
+    </div>
+    <div class="wrap grid fly__cap">
+      <h2 class="d2 fly__name">Кварц</h2>
+      <p class="lead fly__line">Рассветная. Окна на&nbsp;восток, кухня встречает солнце первой.</p>
+      <a class="tick-link fly__link" href="villa.html?v=kvarc">Лист 04.1. Кварц</a>
+    </div>
+  </div>
+</section>
+
+<!-- Экран 3. Генплан в лёгком режиме и экспликация вилл -->
+<section class="sec wrap" id="genplan">
+  <div class="sec__head">
+    <h2 class="d2">У&nbsp;каждой виллы свой берег</h2>
+    <p class="txt">Выберите виллу на плане мыса. Покажем этажи, площади и&nbsp;куда смотрят окна.</p>
+  </div>
+  <div class="grid gpl">
+    <div class="gpl__map sheet"><svg id="gplSvg" aria-label="Генплан мыса Светлого"></svg></div>
+    <div class="gpl__tbl">
+      <table class="expl" id="expl">
+        <thead><tr><th scope="col">№</th><th scope="col">Вилла</th><th scope="col" class="r">м²</th><th scope="col" class="r">Спален</th><th scope="col">Окна на</th><th scope="col">Статус</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <a class="tick-link gpl__link" href="villy.html">Лист 03. Генплан</a>
+    </div>
+  </div>
+</section>
+
+<!-- Экран 4. Вода с трёх сторон: видео тумана из v1 со сценой открытия -->
+<section class="view" id="voda">
+  <div class="view__stage">
+    <div class="view__media" id="viewMedia">
+      <video id="mist" muted playsinline loop preload="none" data-poster="assets/img/view.webp" data-poster-m="assets/img/view-m.webp" data-src="assets/video/mist.mp4" data-src-m="assets/video/mist-m.mp4" aria-hidden="true"></video>
+    </div>
+    <div class="view__text wrap">
+      <h2 class="view__title"><span class="lm"><span>Вода</span></span><span class="lm"><span>с&nbsp;трёх сторон</span></span></h2>
+    </div>
+  </div>
+  <div class="wrap view__foot">
+    <p class="lead">Западные террасы смотрят на открытое озеро. До другого берега четыре километра.</p>
+    <a class="tick-link" href="mesto.html">Лист 05. Место</a>
+  </div>
+</section>
+
+<!-- Экран 5. Ведомость листов крупно: строка и миниатюра ключевой картинки листа -->
+<section class="sec wrap" id="listy">
+  <h2 class="d2 listy__h">Ведомость листов</h2>
+  <ol class="ledger">
+    <li><a href="arhitektura.html"><i>02</i><span class="ledger__name">Архитектура и материалы</span><span class="ledger__line">Один день в гостиной и&nbsp;четыре материала под лупой.</span><img class="ledger__img" src="assets/img/glavnaya/list-02.webp" width="240" height="160" alt="" loading="lazy" decoding="async"></a></li>
+    <li><a href="villy.html"><i>03</i><span class="ledger__name">Генплан</span><span class="ledger__line">Пять участков на мысе и&nbsp;куда смотрит каждый.</span>
+      <svg class="ledger__img ledger__svg" viewBox="80 90 720 480" aria-hidden="true"><rect x="0" y="0" width="900" height="700" fill="#DCE4E2"/><path d="M800 640H120c-30-40-20-90 30-120 60-36 40-90 90-120 50-30 120-10 160-60 34-42 30-110 90-150 40-26 100-30 150-20 40 8 60 0 80-10 22-4 34 6 30 26-6 30-30 52-14 84 14 28 40 34 54 60L800 640z" fill="#F1EEE7" stroke="#3B3E40" stroke-width="3"/><g fill="none" stroke="#9C7C4D" stroke-width="5" stroke-dasharray="14 6"><rect x="650" y="148" width="50" height="50"/><rect x="520" y="170" width="56" height="54"/><rect x="452" y="274" width="50" height="46"/><rect x="302" y="394" width="52" height="50"/><rect x="208" y="490" width="60" height="58"/></g></svg></a></li>
+    <li><a href="villa.html?v=kvarc"><i>04</i><span class="ledger__name">Виллы</span><span class="ledger__line">Кварц, Берилл, Топаз, Опал, Агат. Планы этажей и&nbsp;свет в&nbsp;окнах.</span><img class="ledger__img" src="assets/img/glavnaya/list-04.webp" width="240" height="160" alt="" loading="lazy" decoding="async"></a></li>
+    <li><a href="mesto.html"><i>05</i><span class="ledger__name">Место. Ситуационный план</span><span class="ledger__line">Вода с&nbsp;трёх сторон, час до города и&nbsp;год на мысе.</span><img class="ledger__img" src="assets/img/glavnaya/list-05.webp" width="240" height="160" alt="" loading="lazy" decoding="async"></a></li>
+    <li><a href="klub.html"><i>06</i><span class="ledger__name">Клуб</span><span class="ledger__line">Причал и&nbsp;катер, сауна у&nbsp;воды, гостиная клуба, управляющий и&nbsp;охрана.</span><img class="ledger__img" src="assets/img/glavnaya/list-06.webp" width="240" height="160" alt="" loading="lazy" decoding="async"></a></li>
+    <li><a href="pokaz.html"><i>07</i><span class="ledger__name">Частный показ</span><span class="ledger__line">Выберите день и&nbsp;свет, встретим у&nbsp;ворот.</span>
+      <svg class="ledger__img ledger__svg" viewBox="0 0 240 160" aria-hidden="true"><rect width="240" height="160" fill="#FBFAF7"/><line x1="16" y1="118" x2="224" y2="118" stroke="#3B3E40" stroke-width="1.5"/><path d="M78 118C96 70 144 70 162 118" fill="rgba(156,124,77,.12)" stroke="#9C7C4D" stroke-width="2"/><path d="M147 92C153 100 158 108 162 118" fill="none" stroke="#77592E" stroke-width="5" stroke-linecap="round"/><g fill="#FBFAF7" stroke="#1A1C1E" stroke-width="1.5"><circle cx="78" cy="118" r="4"/><circle cx="162" cy="118" r="4"/></g><g stroke="#C4BCAD" stroke-width="1.5"><line x1="16" y1="118" x2="16" y2="126"/><line x1="68" y1="118" x2="68" y2="126"/><line x1="120" y1="118" x2="120" y2="126"/><line x1="172" y1="118" x2="172" y2="126"/><line x1="224" y1="118" x2="224" y2="126"/></g></svg></a></li>
+  </ol>
+</section>
+
+<nav class="next wrap" aria-label="Следующий лист"><a href="arhitektura.html"><span class="d2">Лист 02. Архитектура и материалы</span></a></nav>
+</main>
+
+<footer class="foot">
+  <div class="wrap grid foot__grid">
+    <div class="foot__brand">
+      <p class="foot__logo">ГРАНИ</p>
+      <p class="cap">Клубные виллы на мысе Светлом</p>
+    </div>
+    <nav class="foot__vedom" aria-labelledby="vedom-h">
+      <h2 class="foot__h" id="vedom-h">Ведомость листов</h2>
+      <p class="vedom__head tech" aria-hidden="true"><span>Лист</span><span>Наименование</span></p>
+      <ol class="vedom">
+        <li><a href="index.html" aria-current="page"><i>01</i>Общие данные</a></li>
+        <li><a href="arhitektura.html"><i>02</i>Архитектура и материалы</a></li>
+        <li><a href="villy.html"><i>03</i>Генплан</a></li>
+        <li class="vedom__grp"><span><i>04</i>Виллы</span></li>
+        <li><a href="villa.html?v=kvarc"><i>04.1</i>Кварц</a></li>
+        <li><a href="villa.html?v=berill"><i>04.2</i>Берилл</a></li>
+        <li><a href="villa.html?v=topaz"><i>04.3</i>Топаз</a></li>
+        <li><a href="villa.html?v=opal"><i>04.4</i>Опал</a></li>
+        <li><a href="villa.html?v=agat"><i>04.5</i>Агат</a></li>
+        <li><a href="mesto.html"><i>05</i>Место. Ситуационный план</a></li>
+        <li><a href="klub.html"><i>06</i>Клуб</a></li>
+        <li><a href="pokaz.html"><i>07</i>Частный показ</a></li>
+      </ol>
+    </nav>
+    <dl class="foot__who">
+      <div><dt>Девелопер</dt><dd>«Северный камень»</dd></div>
+      <div><dt>Архитектура</dt><dd>Бюро «Линия воды», Вера Ланская</dd></div>
+    </dl>
+  </div>
+  <p class="wrap foot__demo cap">Демонстрационный проект. Резиденция ГРАНИ вымышлена, сайт создан для портфолио. Планировки, цены, локация и контакты условны.</p>
+</footer>
+
+<script src="assets/js/gsap.min.js" defer></script>
+<script src="assets/js/ScrollTrigger.min.js" defer></script>
+<script src="assets/js/lenis.min.js" defer></script>
+<script type="module" src="assets/js/pages/glavnaya.js"></script>
+</body>
+</html>

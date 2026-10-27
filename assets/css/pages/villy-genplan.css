@@ -1,0 +1,77 @@
+/* ГРАНИ: генплан мыса (SVG рисует assets/js/pages/villy-genplan.js). Общий для villy.html и villa.html.
+   Толщины и кегли в экранных пикселях через --u (метров в css-пикселе, ставит JS). */
+.gp{--land:#F1EEE7;display:block;width:100%;height:100%;font-family:var(--ff-t);-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+.gp-water{fill:var(--water)}
+.gp-ripple{opacity:.5;pointer-events:none}
+.gp-ripple-ln{fill:none;stroke:var(--glass);stroke-opacity:.26;stroke-width:calc(.8px * var(--u,1))}
+.gp-iso path{fill:none;stroke:var(--glass);stroke-width:calc(.75px * var(--u,1));stroke-dasharray:calc(5px * var(--u,1)) calc(4px * var(--u,1))}
+.gp-land{fill:var(--land)}
+.gp-topo path{fill:none;stroke:var(--line-2);stroke-width:calc(.6px * var(--u,1))}
+.gp-topo path.gp-topo--b{stroke-width:calc(1px * var(--u,1))}
+.gp-hatch-bg{fill:var(--hatch-bg)}
+.gp-hatch-ln{stroke:rgba(59,62,64,.28);stroke-width:.6}
+.gp-rock{stroke:rgba(59,62,64,.35);stroke-width:calc(.5px * var(--u,1))}
+.gp-shore{fill:none;stroke:var(--ink-2);stroke-width:calc(1px * var(--u,1))}
+.gp-cross path{fill:none;stroke:var(--line-2);stroke-width:calc(.6px * var(--u,1))}
+.gp-road{fill:none;stroke:#D8D1C3;stroke-width:7;stroke-linecap:round}
+.gp-park{fill:var(--sand);stroke:var(--ink-2);stroke-width:calc(.6px * var(--u,1))}
+.gp-paths path{fill:none;stroke:var(--line-2);stroke-width:calc(1.6px * var(--u,1));stroke-dasharray:calc(.1px * var(--u,1)) calc(3.4px * var(--u,1));stroke-linecap:round}
+.gp-lot{cursor:pointer;outline:none}
+.gp-lot-f{fill:rgba(244,242,237,.82);transition:fill .25s var(--ease-out)}
+.gp-lot-b{fill:none;stroke:var(--bronze);stroke-width:calc(.9px * var(--u,1));stroke-dasharray:calc(12px * var(--u,1)) calc(3px * var(--u,1)) calc(2px * var(--u,1)) calc(3px * var(--u,1))}
+.gp-lot.is-on .gp-lot-f{fill:#EDE3D2}
+.gp-lot:focus-visible .gp-lot-b{stroke:var(--bronze-ink);stroke-width:calc(1.6px * var(--u,1))}
+.gp-hit{fill:transparent}
+.gp-pine{fill:rgba(244,242,237,.4);stroke:rgba(59,62,64,.38);stroke-width:calc(.55px * var(--u,1));pointer-events:none}
+.gp-pine-c{fill:rgba(59,62,64,.45);pointer-events:none}
+.gp-pines,.gp-build,.gp-villas,.gp-labels,.gp-dims,.gp-fang,.gp-sunrays,.gp-call,.gp-iso,.gp-topo,.gp-rocks,.gp-cross,.gp-paths,.gp-shore{pointer-events:none}
+.gp-foot{fill:var(--poche);transition:fill .25s var(--ease-out)}
+.gp-house.is-on .gp-foot{fill:var(--bronze-ink)}
+.gp-deck{fill:#E8E3DA;stroke:var(--ink-2);stroke-width:calc(.6px * var(--u,1))}
+.gp-pool{fill:var(--pool);stroke:var(--glass-ink);stroke-width:calc(.6px * var(--u,1))}
+.gp-pier{fill:#E8E3DA;stroke:var(--ink-2);stroke-width:calc(.7px * var(--u,1))}
+.gp-boat{fill:var(--bronze);stroke:var(--ink-2);stroke-width:calc(.5px * var(--u,1))}
+.gp-dim{fill:none;stroke:var(--ink-2);stroke-width:calc(.7px * var(--u,1))}
+.gp-dim-t{fill:none;stroke:var(--ink);stroke-width:calc(1.3px * var(--u,1))}
+.gp-fan{stroke:var(--glass-ink);stroke-width:calc(.8px * var(--u,1))}
+.gp-fan-s0{stop-color:#8FA6A6;stop-opacity:.42}
+.gp-fan-s1{stop-color:#8FA6A6;stop-opacity:0}
+
+/* надписи: Ysabeau курсив для измеренного, Forum для имён */
+.gp text{paint-order:stroke;stroke-linejoin:round}
+.gp-t-name{font:400 calc(20px * var(--u,1))/1 var(--ff-d);fill:var(--ink);stroke:var(--land);stroke-width:calc(3px * var(--u,1));transition:opacity .25s}
+.gp-t-ann{font:italic 500 calc(12px * var(--u,1)) var(--ff-t);fill:var(--ink-2);stroke:var(--land);stroke-width:calc(2.5px * var(--u,1))}
+.gp-t-sub{fill:var(--muted)}
+.gp-t-tech{font:600 calc(11px * var(--u,1)) var(--ff-t);letter-spacing:.16em;fill:var(--muted)}
+.gp-t-water{font:italic 500 calc(12px * var(--u,1)) var(--ff-t);fill:var(--glass-ink);stroke:var(--water);stroke-width:calc(2.5px * var(--u,1))}
+.gp-t-spaced{letter-spacing:.3em;font-size:calc(13px * var(--u,1))}
+.gp-t-in{font-size:calc(13px * var(--u,1));stroke:none}
+.gp-t-depth{font:italic 500 calc(11px * var(--u,1)) var(--ff-t);fill:var(--glass-ink);stroke:var(--water);stroke-width:calc(3px * var(--u,1))}
+.gp-t-topo{font:italic 500 calc(11px * var(--u,1)) var(--ff-t);fill:var(--muted);stroke:var(--land);stroke-width:calc(3px * var(--u,1))}
+.gp-t-az{font:italic 500 calc(12px * var(--u,1)) var(--ff-t);fill:var(--glass-ink);stroke:var(--water);stroke-width:calc(3px * var(--u,1))}
+.gp-t-dim{stroke:var(--land)}
+.gp-t-big{font:400 calc(30px * var(--u,1))/1 var(--ff-d);fill:var(--ink);stroke:var(--land);stroke-width:calc(4px * var(--u,1))}
+.gp-t-callsub{font-size:calc(13px * var(--u,1))}
+.gp-call-dot{fill:var(--surface);stroke:var(--ink);stroke-width:calc(.9px * var(--u,1))}
+.gp-call-ln{fill:none;stroke:var(--ink);stroke-width:calc(.9px * var(--u,1))}
+.gp-vl{transition:opacity .25s}
+.gp.has-active .gp-vl{opacity:.4}
+.gp--full.has-active .gp-vl.is-on{opacity:0}
+.gp--lite.has-active .gp-vl.is-on,.gp--villa .gp-vl.is-on{opacity:1}
+
+/* лучи солнца: сегодня бронза сплошной, 22 июня пунктир, 22 декабря точки */
+.gp-ray{fill:none;stroke:var(--bronze);stroke-width:calc(1.2px * var(--u,1));opacity:.55;stroke-linecap:round;transition:opacity .25s,stroke-width .25s}
+.gp-ray--june{stroke-dasharray:calc(6px * var(--u,1)) calc(4px * var(--u,1))}
+.gp-ray--dec{stroke-dasharray:calc(.1px * var(--u,1)) calc(4px * var(--u,1));stroke-width:calc(1.8px * var(--u,1))}
+.gp-ray.is-on{opacity:1;stroke-width:calc(1.6px * var(--u,1))}
+.gp-ray--dec.is-on{stroke-width:calc(2.4px * var(--u,1))}
+.gp-ray-sun{fill:var(--surface);stroke:var(--bronze);stroke-width:calc(1.2px * var(--u,1))}
+
+@media (max-width:760px){
+  .gp-t-spaced{display:none}
+  .gp-t-name{font-size:calc(17px * var(--u,1))}
+  .gp-t-ann,.gp-t-water,.gp-t-az,.gp-t-depth,.gp-t-topo{font-size:calc(11px * var(--u,1))}
+  .gp-t-tech{font-size:calc(11px * var(--u,1))}
+}
+.gp-labels text.is-dup{opacity:0}
+.gp--nocall.has-active .gp-vl.is-on{opacity:1}

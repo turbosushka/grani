@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Клуб · ГРАНИ</title>
+<meta name="description" content="ГРАНИ. Пять вилл из стекла и камня на мысе Светлом. Демо-проект для портфолио.">
+<meta name="theme-color" content="#F4F2ED">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F4F2ED'/%3E%3Cpath d='M16 4 27 12 23 27H9L5 12z' fill='none' stroke='%239C7C4D' stroke-width='1.6'/%3E%3Cpath d='M5 12h22M16 4 12 12l4 15 4-15z' fill='none' stroke='%239C7C4D' stroke-width='1'/%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/forum-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/ysabeau-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/pages/villy-genplan.css">
+<link rel="stylesheet" href="assets/css/pages/klub.css">
+<script src="assets/js/head.js"></script>
+</head>
+<body data-page="klub">
+
+<div class="veil" aria-hidden="true"><div class="veil__word"><span>Г</span><span>Р</span><span>А</span><span>Н</span><span>И</span></div><div class="veil__bar"><i></i></div></div>
+
+<header class="hdr">
+  <a class="hdr__logo" href="index.html" aria-label="ГРАНИ, на главную">ГРАНИ</a>
+  <nav class="hdr__nav" aria-label="Разделы">
+    <a href="index.html">Главная</a>
+    <a href="arhitektura.html">Архитектура</a>
+    <a href="villy.html">Виллы</a>
+    <a href="mesto.html">Место</a>
+    <a href="klub.html" aria-current="page">Клуб<i class="hdr__mark" aria-hidden="true"></i></a>
+  </nav>
+  <a class="btn btn--line hdr__cta" href="pokaz.html">Частный показ</a>
+  <button class="hdr__burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="curtain"><i></i><i></i></button>
+</header>
+
+<div class="curtain" id="curtain" hidden>
+  <nav aria-label="Листы альбома">
+    <ol class="curtain__list">
+      <li><a href="index.html"><i>01</i>Главная</a></li>
+      <li><a href="arhitektura.html"><i>02</i>Архитектура</a></li>
+      <li><a href="villy.html"><i>03</i>Виллы</a>
+        <div class="curtain__villas"><a href="villa.html?v=kvarc"><i>04.1</i>Кварц</a><a href="villa.html?v=berill"><i>04.2</i>Берилл</a><a href="villa.html?v=topaz"><i>04.3</i>Топаз</a><a href="villa.html?v=opal"><i>04.4</i>Опал</a><a href="villa.html?v=agat"><i>04.5</i>Агат</a></div>
+      </li>
+      <li><a href="mesto.html"><i>05</i>Место</a></li>
+      <li><a href="klub.html" aria-current="page"><i>06</i>Клуб</a></li>
+      <li><a href="pokaz.html"><i>07</i>Частный показ</a></li>
+    </ol>
+  </nav>
+  <p class="curtain__foot cap">Мыс Светлый · показы по записи</p>
+</div>
+
+<main id="top">
+<!-- Экран 1. Гостиная клуба (DIZAJN 3.6): фото с выносками в колонках 1–8, справа заголовок, абзац, штамп -->
+<section class="plate wrap" id="gostinaya">
+  <div class="grid kl-top">
+    <figure class="kl-photo" id="clubPhoto">
+      <picture><source media="(max-width: 760px)" srcset="assets/img/club-stol-m.webp" width="1100" height="730"><img src="assets/img/club-stol.webp" width="2048" height="1360" alt="Гостиная клуба. Камин в каменной стене, книжные полки, длинный стол и окно на озеро" fetchpriority="high" decoding="async"></picture>
+      <!-- точки выносок в процентах исходного кадра club-stol (центр столешницы 51 %, 59 % по отчёту продюсера) -->
+      <span class="leader kl-ld" data-x="24" data-y="57" style="--len:60px"><span class="leader__t"><i>1</i>Камин</span></span>
+      <span class="leader kl-ld" data-x="56" data-y="30" style="--len:46px"><span class="leader__t"><i>2</i>Библиотека</span></span>
+      <span class="leader kl-ld" data-x="46" data-y="60" style="--len:64px"><span class="leader__t"><i>3</i>Длинный стол</span></span>
+    </figure>
+    <div class="kl-top__text">
+      <h1 class="d1 kl-title">Клуб на пять семей</h1>
+      <p class="lead">Соседей мало, и все знакомы. Домом занимается управляющий, а вы просто приезжаете.</p>
+      <dl class="stamp"><div><dt>Лист</dt><dd>06 из 07</dd></div><div><dt>Вилл</dt><dd>5</dd></div><div><dt>Причал</dt><dd>6 мест</dd></div></dl>
+    </div>
+  </div>
+</section>
+
+<!-- Экран 2. Клуб на плане: фрагмент генплана, камеры с узким сектором наружу, номера 1–5 и пять услуг -->
+<section class="sec wrap" id="plan-kluba">
+  <div class="sec__head">
+    <h2 class="d2">Что даёт клуб</h2>
+  </div>
+  <div class="grid kplan">
+    <div class="kplan__map sheet"><svg id="kSvg" aria-label="Клубная часть мыса на генплане. Причал, клубный дом, сауна, въезд и камеры по периметру"></svg></div>
+    <ol class="svc" id="svc">
+      <li data-n="1"><i>1</i><div><h3 class="d3">Причал и&nbsp;катер</h3><p>Общий причал на шесть мест и&nbsp;клубный катер с&nbsp;капитаном по звонку.</p></div></li>
+      <li data-n="2"><i>2</i><div><h3 class="d3">Гостиная клуба</h3><p>Камин, библиотека и&nbsp;длинный стол для ужинов. Гостиную можно занять для своих гостей.</p></div></li>
+      <li data-n="3"><i>3</i><div><h3 class="d3">Управляющий дома</h3><p>Откроет и&nbsp;прогреет дом к&nbsp;приезду, примет доставку, присмотрит за садом.</p></div></li>
+      <li data-n="4"><i>4</i><div><h3 class="d3">Сауна у&nbsp;воды</h3><p>Кедровая сауна на берегу и&nbsp;спуск прямо в&nbsp;озеро. Зимой прорубь чистят каждое утро.</p></div></li>
+      <li data-n="5"><i>5</i><div><h3 class="d3">Тихая охрана</h3><p>Въезд и&nbsp;периметр под присмотром круглые сутки. Камеры смотрят на границы, а&nbsp;не во двор.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<nav class="next wrap" aria-label="Следующий лист"><a href="pokaz.html"><span class="d2">Лист 07. Частный показ</span></a></nav>
+</main>
+
+<footer class="foot">
+  <div class="wrap grid foot__grid">
+    <div class="foot__brand">
+      <p class="foot__logo">ГРАНИ</p>
+      <p class="cap">Клубные виллы на мысе Светлом</p>
+    </div>
+    <nav class="foot__vedom" aria-labelledby="vedom-h">
+      <h2 class="foot__h" id="vedom-h">Ведомость листов</h2>
+      <p class="vedom__head tech" aria-hidden="true"><span>Лист</span><span>Наименование</span></p>
+      <ol class="vedom">
+        <li><a href="index.html"><i>01</i>Общие данные</a></li>
+        <li><a href="arhitektura.html"><i>02</i>Архитектура и материалы</a></li>
+        <li><a href="villy.html"><i>03</i>Генплан</a></li>
+        <li class="vedom__grp"><span><i>04</i>Виллы</span></li>
+        <li><a href="villa.html?v=kvarc"><i>04.1</i>Кварц</a></li>
+        <li><a href="villa.html?v=berill"><i>04.2</i>Берилл</a></li>
+        <li><a href="villa.html?v=topaz"><i>04.3</i>Топаз</a></li>
+        <li><a href="villa.html?v=opal"><i>04.4</i>Опал</a></li>
+        <li><a href="villa.html?v=agat"><i>04.5</i>Агат</a></li>
+        <li><a href="mesto.html"><i>05</i>Место. Ситуационный план</a></li>
+        <li><a href="klub.html" aria-current="page"><i>06</i>Клуб</a></li>
+        <li><a href="pokaz.html"><i>07</i>Частный показ</a></li>
+      </ol>
+    </nav>
+    <dl class="foot__who">
+      <div><dt>Девелопер</dt><dd>«Северный камень»</dd></div>
+      <div><dt>Архитектура</dt><dd>Бюро «Линия воды», Вера Ланская</dd></div>
+    </dl>
+  </div>
+  <p class="wrap foot__demo cap">Демонстрационный проект. Резиденция ГРАНИ вымышлена, сайт создан для портфолио. Планировки, цены, локация и контакты условны.</p>
+</footer>
+
+<script src="assets/js/gsap.min.js" defer></script>
+<script src="assets/js/ScrollTrigger.min.js" defer></script>
+<script src="assets/js/lenis.min.js" defer></script>
+<script type="module" src="assets/js/pages/klub.js"></script>
+</body>
+</html>

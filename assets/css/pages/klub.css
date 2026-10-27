@@ -1,0 +1,52 @@
+/* Лист 06, Клуб (klub.html). Подключается после base.css и villy-genplan.css (фрагмент генплана).
+   Экран 1: гостиная клуба с выносками и табличка листа. Экран 2: клуб на плане и пять услуг. */
+
+/* ---------- экран 1 ---------- */
+.kl-top{align-items:end;row-gap:32px}
+.kl-photo{grid-column:1/9;position:relative;aspect-ratio:3/2;overflow:hidden;background:#D8CFC2}
+.kl-photo img{width:100%;height:100%;object-fit:cover}
+.kl-ld{opacity:0;transition:opacity .6s var(--ease-out)}
+.kl-ld.is-on{opacity:1}
+.kl-ld.is-out{display:none}
+.kl-photo .leader__t{display:flex;align-items:baseline;gap:8px;background:var(--surface);padding:4px 8px 4px 6px;box-shadow:0 10px 28px rgba(26,28,30,.14)}
+.kl-photo .leader__t i,.svc i{font:italic 600 11px/1 var(--ff-t);color:var(--bronze-ink);border:1px solid var(--bronze);padding:2px 4px}
+.kl-top__text{grid-column:9/13;display:grid;gap:24px;align-content:end}
+.kl-title{font-size:clamp(3.2rem,4.8vw,5rem)}
+.kl-top__text .stamp{grid-column:auto;grid-row:auto;justify-self:stretch}
+
+/* ---------- экран 2 ---------- */
+.kplan{align-items:start;row-gap:32px}
+.kplan__map{grid-column:1/9;padding:14px;position:sticky;top:calc(var(--hdr) + 24px)}
+.kplan__map svg{display:block;width:100%;aspect-ratio:16/10;height:auto}
+.svc{grid-column:9/13;border-top:1px solid var(--ink-2)}
+.svc li{display:grid;grid-template-columns:30px 1fr;gap:12px;padding:18px 8px 18px 0;border-bottom:1px solid var(--line);transition:background-color .2s}
+.svc li.is-on{background:var(--sel)}
+.svc i{justify-self:start;align-self:start;margin-top:6px;font-style:italic}
+.svc .d3{font-size:1.45rem}
+.svc p{margin-top:8px;font-size:15px;line-height:1.55;color:var(--ink-2)}
+/* слой клуба поверх генплана: камеры, периметр, номера услуг (кегли в пикселях экрана через --u) */
+.kc-per{fill:none;stroke:var(--bronze);stroke-width:calc(1.2px * var(--u,1));stroke-dasharray:calc(8px * var(--u,1)) calc(4px * var(--u,1))}
+.kc-cone{fill:rgba(79,103,103,.16);stroke:var(--glass-ink);stroke-width:calc(.8px * var(--u,1))}
+.kc-cam{fill:var(--ink)}
+.kc-no{fill:var(--surface);stroke:var(--bronze);stroke-width:calc(1px * var(--u,1));transition:fill .2s}
+.kc-not{font:italic 600 calc(12px * var(--u,1)) var(--ff-t);fill:var(--bronze-ink);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.kc-g{cursor:pointer}
+.kc-g.is-on .kc-no{fill:var(--bronze)}
+.kc-g.is-on .kc-not{fill:var(--surface)}
+.kc-t{font:italic 500 calc(12px * var(--u,1)) var(--ff-t);fill:var(--ink-2);paint-order:stroke;stroke:var(--land,#F1EEE7);stroke-width:calc(2.5px * var(--u,1))}
+.kc-sec .kc-cone{transition:fill .2s}
+.kc-sec.is-on .kc-cone{fill:rgba(156,124,77,.3);stroke:var(--bronze-ink)}
+.kc-sec.is-on .kc-per{stroke:var(--bronze-ink);stroke-width:calc(2px * var(--u,1))}
+
+@media (max-width:980px){
+  .kl-photo,.kl-top__text,.kplan__map,.svc{grid-column:1/-1}
+  .kplan__map{position:relative;top:auto}
+}
+@media (max-width:760px){
+  .kl-photo{margin-inline:calc(var(--gut) * -1);aspect-ratio:4/3}
+  .kl-photo .leader__t{font-size:12px;box-shadow:none}
+  .kl-photo .leader{--len:24px!important}
+  .kl-title{font-size:3.2rem}
+  .kplan__map{padding:6px;margin-inline:calc(var(--gut) * -1 + 4px)}
+  .kplan__map svg{aspect-ratio:1/1}
+}

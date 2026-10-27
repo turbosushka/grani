@@ -1,0 +1,72 @@
+/* ГРАНИ: архитектурный план (assets/js/plans.js). Все классы с префиксом pl-.
+   Линии тоньше пикселя не масштабируются вместе с планом (non-scaling-stroke),
+   подписи держат экранный кегль через --u (единиц плана в css-пикселе, ставит JS). */
+.pl{--pl-wall:#2F3032;--pl-paper:#FBFAF7;--pl-fur:#B9B1A5;--pl-fix:#8F897F;--pl-glass:#5E7A80;
+  --pl-dim:var(--bronze,#9C7C4D);--pl-dimt:var(--bronze-ink,#77592E);--pl-hl:#EFE5D3;
+  display:block;width:100%;height:auto;overflow:visible;font-family:var(--ff-t,"Ysabeau",sans-serif);
+  -webkit-tap-highlight-color:transparent}
+.pl *{vector-effect:non-scaling-stroke}
+.pl-wall{fill:var(--pl-wall)}
+/* наведение ловят только полы комнат и террас: мебель, двери, стены и подписи прозрачны для указателя */
+.pl-wall,.pl-ops,.pl-items,.pl-doors,.pl-stair,.pl-dims,.pl-north,.pl-rail,.pl-glass--facet,.pl-post,.pl-pool,.pl-ripple,.pl-infinity{pointer-events:none}
+.pl-room,.pl-deckg{cursor:pointer}
+.pl-floor{fill:var(--pl-paper);stroke:var(--pl-paper);stroke-width:.8px;transition:fill .35s ease,stroke .35s ease}
+.pl-room{outline:none}
+.pl-room.is-on .pl-floor,.pl-room:focus-visible .pl-floor{fill:var(--pl-hl);stroke:var(--pl-hl)}
+.pl-room--void .pl-floor{fill:#F5F2EC;stroke:#F5F2EC}
+.pl-gap{fill:var(--pl-paper)}
+.pl-sill{stroke:#B7B0A4;stroke-width:.5px}
+.pl-glass{fill:var(--pl-paper);stroke:var(--pl-glass);stroke-width:.75px}
+.pl-glass--facet{fill:#EEF2F1}
+.pl-post{fill:var(--pl-wall)}
+.pl-arrow-s{fill:none;stroke:var(--pl-glass);stroke-width:.6px}
+.pl-fur{fill:var(--pl-paper);stroke:var(--pl-fur);stroke-width:.6px}
+.pl-fix{fill:var(--pl-paper);stroke:var(--pl-fix);stroke-width:.65px}
+.pl-room.is-on~* .pl-fur{fill:var(--pl-paper)}
+.pl-leaf{stroke:var(--ink-2,#3B3E40);stroke-width:1px;stroke-linecap:square}
+.pl-swing{fill:none;stroke:#A39B8E;stroke-width:.5px}
+.pl-stair .pl-st-box{fill:var(--pl-paper);stroke:#6B6E70;stroke-width:.7px}
+.pl-st-line{stroke:#7A7C7E;stroke-width:.55px}
+.pl-st-arrow{fill:none;stroke:var(--ink-2,#3B3E40);stroke-width:.7px;stroke-linejoin:round}
+.pl-st-dot{fill:var(--ink-2,#3B3E40)}
+.pl-stair--up .pl-st-box{fill:#F3F0EA}
+.pl-stair--up .pl-st-line{stroke:#A7A39B}
+.pl-void-edge{fill:none;stroke:var(--ink-2,#3B3E40);stroke-width:.6px;stroke-dasharray:4 3}
+.pl-deck{fill:#EFEAE0;stroke:#CFC6B6;stroke-width:.6px;transition:fill .35s ease}
+.pl-deckg.is-on .pl-deck{fill:var(--pl-hl)}
+.pl-deck-hatch{stroke:none;pointer-events:none}
+.pl-plank{stroke:#DDD4C4;stroke-width:.5px}
+.pl-deckg{outline:none}
+.pl-dim{stroke:var(--pl-dim);stroke-width:.6px;fill:none}
+.pl-dim--tick{stroke-width:1px}
+.pl-dim--ext{stroke-width:.45px;opacity:.7}
+.pl-north-ring{fill:none;stroke:var(--pl-dim);stroke-width:.6px}
+.pl-north-needle{fill:var(--pl-wall)}
+.pl-pool{fill:#DCE6E6;stroke:var(--pl-glass);stroke-width:.6px}
+.pl-ripple{fill:none;stroke:#9DB3B5;stroke-width:.5px}
+.pl-infinity{stroke:var(--pl-glass);stroke-width:1.6px;stroke-dasharray:1 2}
+.pl-rail{stroke:var(--ink-2,#3B3E40);stroke-width:1.1px}
+.pl-void-x{stroke:#D3CCC0;stroke-width:.6px;fill:none}
+.pl-room--void{pointer-events:none}
+
+/* подписи: кегль в экранных пикселях через --u */
+.pl-labels{pointer-events:none}
+.pl-labels text{text-anchor:middle;font-variant-numeric:lining-nums tabular-nums}
+.pl-name{font-size:calc(11.5px * var(--u,.04));fill:var(--ink-2,#3B3E40);letter-spacing:.02em;font-weight:500}
+.pl-name,.pl-area{paint-order:stroke;stroke:var(--pl-paper);stroke-width:3.5px;stroke-linejoin:round}
+.pl-area{font-size:calc(10.5px * var(--u,.04));fill:var(--pl-dimt);letter-spacing:.03em}
+.pl-lb--deck .pl-name{font-style:italic;font-weight:400;fill:#6E6A63}
+.pl-lb--deck .pl-area{fill:#8A8478}
+.pl-lb--void .pl-name{font-style:italic;font-weight:400;fill:#6E6A63}
+.pl-dimt{font-size:calc(10.5px * var(--u,.04));fill:var(--pl-dimt);letter-spacing:.04em;dominant-baseline:auto;transform-box:fill-box}
+.pl-dimt{paint-order:stroke;stroke:var(--bg,#F4F2ED);stroke-width:3px;stroke-linejoin:round}
+.pl-northt{font-size:calc(11px * var(--u,.04));fill:var(--pl-dimt);dominant-baseline:middle;letter-spacing:.06em}
+
+/* что не влезло в комнату, показываем только при наведении или касании */
+.pl-lb--noarea .pl-area{opacity:0}
+.pl-lb--hide{opacity:0}
+.pl-lb{transition:opacity .25s ease}
+.pl-lb.is-on{opacity:1}
+.pl-lb.is-on .pl-area{opacity:1;font-size:calc(15px * var(--u,.04));font-weight:600}
+.pl-lb.is-on .pl-name,.pl-lb.is-on .pl-area{paint-order:stroke;stroke:var(--pl-hl);stroke-width:4px;stroke-linejoin:round}
+@media (prefers-reduced-motion:reduce){.pl-floor,.pl-lb,.pl-deck{transition:none}}

@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Частный показ · ГРАНИ</title>
+<meta name="description" content="ГРАНИ. Пять вилл из стекла и камня на мысе Светлом. Демо-проект для портфолио.">
+<meta name="theme-color" content="#F4F2ED">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F4F2ED'/%3E%3Cpath d='M16 4 27 12 23 27H9L5 12z' fill='none' stroke='%239C7C4D' stroke-width='1.6'/%3E%3Cpath d='M5 12h22M16 4 12 12l4 15 4-15z' fill='none' stroke='%239C7C4D' stroke-width='1'/%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/forum-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/ysabeau-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/pages/pokaz.css">
+<script src="assets/js/head.js"></script>
+</head>
+<body data-page="pokaz">
+
+<div class="veil" aria-hidden="true"><div class="veil__word"><span>Г</span><span>Р</span><span>А</span><span>Н</span><span>И</span></div><div class="veil__bar"><i></i></div></div>
+
+<header class="hdr">
+  <a class="hdr__logo" href="index.html" aria-label="ГРАНИ, на главную">ГРАНИ</a>
+  <nav class="hdr__nav" aria-label="Разделы">
+    <a href="index.html">Главная</a>
+    <a href="arhitektura.html">Архитектура</a>
+    <a href="villy.html">Виллы</a>
+    <a href="mesto.html">Место</a>
+    <a href="klub.html">Клуб</a>
+  </nav>
+  <a class="btn btn--line hdr__cta" href="pokaz.html" aria-current="page">Частный показ</a>
+  <button class="hdr__burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="curtain"><i></i><i></i></button>
+</header>
+
+<div class="curtain" id="curtain" hidden>
+  <nav aria-label="Листы альбома">
+    <ol class="curtain__list">
+      <li><a href="index.html"><i>01</i>Главная</a></li>
+      <li><a href="arhitektura.html"><i>02</i>Архитектура</a></li>
+      <li><a href="villy.html"><i>03</i>Виллы</a>
+        <div class="curtain__villas"><a href="villa.html?v=kvarc"><i>04.1</i>Кварц</a><a href="villa.html?v=berill"><i>04.2</i>Берилл</a><a href="villa.html?v=topaz"><i>04.3</i>Топаз</a><a href="villa.html?v=opal"><i>04.4</i>Опал</a><a href="villa.html?v=agat"><i>04.5</i>Агат</a></div>
+      </li>
+      <li><a href="mesto.html"><i>05</i>Место</a></li>
+      <li><a href="klub.html"><i>06</i>Клуб</a></li>
+      <li><a href="pokaz.html" aria-current="page"><i>07</i>Частный показ</a></li>
+    </ol>
+  </nav>
+  <p class="curtain__foot cap">Мыс Светлый · показы по записи</p>
+</div>
+
+<main id="top">
+<!-- Лист 07. Частный показ (DIZAJN 3.7): слева текст и контакты (колонки 1–4), справа лист с календарём и формой (5–12) -->
+<section class="wrap grid pokaz" id="pokaz">
+  <div class="pokaz__text">
+    <h1 class="d1">Частный показ</h1>
+    <p class="lead">Покажем дом в тот час, когда вам интереснее свет. Встретим у ворот, проведём по участку, а потом оставим вас на террасе, сколько захотите.</p>
+    <dl class="stamp"><div><dt>Лист</dt><dd>07 из 07</dd></div><div><dt>Закат завтра</dt><dd id="stampSet">&nbsp;</dd></div></dl>
+    <dl class="pokaz__contacts">
+      <div><dt>Офис</dt><dd>Мыс Светлый, Береговая, 1</dd></div>
+      <div><dt>Телефон</dt><dd><a href="tel:+79000000000">+7 900 000-00-00</a></dd></div>
+      <div><dt>Часы</dt><dd>Каждый день с&nbsp;10 до&nbsp;20</dd></div>
+    </dl>
+  </div>
+  <div class="pokaz__sheet sheet">
+    <!-- календарь: 21 день с завтрашнего, в ячейке закат и черта длины дня (фича 4) -->
+    <div class="cal" id="cal">
+      <div class="cal__head">
+        <h2 class="d3">Выберите день и&nbsp;свет</h2>
+        <p class="cap">Ближайшие три недели, начиная с&nbsp;завтра.</p>
+      </div>
+      <p class="cal__months ann" id="calMonths" aria-hidden="true"></p>
+      <div class="cal__dow tech" aria-hidden="true"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
+      <div class="cal__grid" id="calGrid" role="group" aria-label="Ближайшие три недели, начиная с завтра"></div>
+      <p class="cal__legend cap">Под датой время заката, черта показывает длину дня.</p>
+      <p class="cal__err" id="calErr" hidden>Выберите день показа.</p>
+    </div>
+
+    <!-- свет: утром, днём, на закате -->
+    <div class="light-pick">
+      <p class="light-pick__h" id="lightH">Когда смотреть свет</p>
+      <div class="light-pick__tabs" id="lightTabs" role="radiogroup" aria-labelledby="lightH">
+        <button type="button" role="radio" aria-checked="false" data-light="utro">утром</button>
+        <button type="button" role="radio" aria-checked="false" data-light="den">днём</button>
+        <button type="button" role="radio" aria-checked="false" data-light="zakat">на закате</button>
+      </div>
+      <p class="cal__err" id="lightErr" hidden>Выберите, когда смотреть свет.</p>
+    </div>
+
+    <!-- панель солнца выбранного дня -->
+    <figure class="sunpanel" id="sunPanel">
+      <svg class="sunpanel__svg" id="sunSvg" viewBox="0 0 800 210" role="img" aria-labelledby="sunLine"></svg>
+      <figcaption class="sunpanel__line" id="sunLine" aria-live="polite">Выберите день в&nbsp;календаре, и&nbsp;мы покажем восход и&nbsp;закат на эту дату.</figcaption>
+    </figure>
+
+    <form class="form" id="form" novalidate>
+      <input type="hidden" name="day" id="fDay">
+      <input type="hidden" name="light" id="fLight">
+      <div class="form__row">
+        <div class="field">
+          <label for="fName">Как к вам обращаться</label>
+          <input id="fName" name="name" type="text" autocomplete="name" required>
+          <span class="field__err">Напишите имя, чтобы мы знали, кого встречать</span>
+        </div>
+        <div class="field">
+          <label for="fPhone">Телефон</label>
+          <input id="fPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7" required>
+          <span class="field__err">Нужен номер целиком, с кодом</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="fVilla">Вилла</label>
+        <div class="select">
+          <select id="fVilla" name="villa">
+            <option value="">Все виллы</option>
+            <option value="kvarc">Кварц</option><option value="berill">Берилл</option><option value="topaz">Топаз</option><option value="opal">Опал</option><option value="agat">Агат</option>
+          </select>
+        </div>
+      </div>
+      <div class="form__send">
+        <button class="btn btn--solid" type="submit">Записаться на показ</button>
+        <p class="cap">Перезвоним в течение дня и подтвердим время.</p>
+      </div>
+      <div class="form__done" id="formDone" hidden tabindex="-1">
+        <p class="form__done-title" id="doneTitle">Спасибо.</p>
+        <p id="doneText"></p>
+        <p class="cap">Это демо-сайт, заявка никуда не отправлена.</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<nav class="next wrap" aria-label="Следующий лист"><a href="index.html"><span class="d2">Лист 01. Общие данные</span></a></nav>
+</main>
+
+<footer class="foot">
+  <div class="wrap grid foot__grid">
+    <div class="foot__brand">
+      <p class="foot__logo">ГРАНИ</p>
+      <p class="cap">Клубные виллы на мысе Светлом</p>
+    </div>
+    <nav class="foot__vedom" aria-labelledby="vedom-h">
+      <h2 class="foot__h" id="vedom-h">Ведомость листов</h2>
+      <p class="vedom__head tech" aria-hidden="true"><span>Лист</span><span>Наименование</span></p>
+      <ol class="vedom">
+        <li><a href="index.html"><i>01</i>Общие данные</a></li>
+        <li><a href="arhitektura.html"><i>02</i>Архитектура и материалы</a></li>
+        <li><a href="villy.html"><i>03</i>Генплан</a></li>
+        <li class="vedom__grp"><span><i>04</i>Виллы</span></li>
+        <li><a href="villa.html?v=kvarc"><i>04.1</i>Кварц</a></li>
+        <li><a href="villa.html?v=berill"><i>04.2</i>Берилл</a></li>
+        <li><a href="villa.html?v=topaz"><i>04.3</i>Топаз</a></li>
+        <li><a href="villa.html?v=opal"><i>04.4</i>Опал</a></li>
+        <li><a href="villa.html?v=agat"><i>04.5</i>Агат</a></li>
+        <li><a href="mesto.html"><i>05</i>Место. Ситуационный план</a></li>
+        <li><a href="klub.html"><i>06</i>Клуб</a></li>
+        <li><a href="pokaz.html" aria-current="page"><i>07</i>Частный показ</a></li>
+      </ol>
+    </nav>
+    <dl class="foot__who">
+      <div><dt>Девелопер</dt><dd>«Северный камень»</dd></div>
+      <div><dt>Архитектура</dt><dd>Бюро «Линия воды», Вера Ланская</dd></div>
+    </dl>
+  </div>
+  <p class="wrap foot__demo cap">Демонстрационный проект. Резиденция ГРАНИ вымышлена, сайт создан для портфолио. Планировки, цены, локация и контакты условны.</p>
+</footer>
+
+<script src="assets/js/gsap.min.js" defer></script>
+<script src="assets/js/ScrollTrigger.min.js" defer></script>
+<script src="assets/js/lenis.min.js" defer></script>
+<script type="module" src="assets/js/pages/pokaz.js"></script>
+</body>
+</html>

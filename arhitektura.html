@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Архитектура и материалы · ГРАНИ</title>
+<meta name="description" content="ГРАНИ. Пять вилл из стекла и камня на мысе Светлом. Демо-проект для портфолио.">
+<meta name="theme-color" content="#F4F2ED">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F4F2ED'/%3E%3Cpath d='M16 4 27 12 23 27H9L5 12z' fill='none' stroke='%239C7C4D' stroke-width='1.6'/%3E%3Cpath d='M5 12h22M16 4 12 12l4 15 4-15z' fill='none' stroke='%239C7C4D' stroke-width='1'/%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/forum-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/ysabeau-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/pages/arhitektura.css">
+<link rel="stylesheet" href="assets/css/pages/svet.css">
+<script src="assets/js/head.js"></script>
+</head>
+<body data-page="arhitektura">
+
+<div class="veil" aria-hidden="true"><div class="veil__word"><span>Г</span><span>Р</span><span>А</span><span>Н</span><span>И</span></div><div class="veil__bar"><i></i></div></div>
+
+<header class="hdr">
+  <a class="hdr__logo" href="index.html" aria-label="ГРАНИ, на главную">ГРАНИ</a>
+  <nav class="hdr__nav" aria-label="Разделы">
+    <a href="index.html">Главная</a>
+    <a href="arhitektura.html" aria-current="page">Архитектура<i class="hdr__mark" aria-hidden="true"></i></a>
+    <a href="villy.html">Виллы</a>
+    <a href="mesto.html">Место</a>
+    <a href="klub.html">Клуб</a>
+  </nav>
+  <a class="btn btn--line hdr__cta" href="pokaz.html">Частный показ</a>
+  <button class="hdr__burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="curtain"><i></i><i></i></button>
+</header>
+
+<div class="curtain" id="curtain" hidden>
+  <nav aria-label="Листы альбома">
+    <ol class="curtain__list">
+      <li><a href="index.html"><i>01</i>Главная</a></li>
+      <li><a href="arhitektura.html" aria-current="page"><i>02</i>Архитектура</a></li>
+      <li><a href="villy.html"><i>03</i>Виллы</a>
+        <div class="curtain__villas"><a href="villa.html?v=kvarc"><i>04.1</i>Кварц</a><a href="villa.html?v=berill"><i>04.2</i>Берилл</a><a href="villa.html?v=topaz"><i>04.3</i>Топаз</a><a href="villa.html?v=opal"><i>04.4</i>Опал</a><a href="villa.html?v=agat"><i>04.5</i>Агат</a></div>
+      </li>
+      <li><a href="mesto.html"><i>05</i>Место</a></li>
+      <li><a href="klub.html"><i>06</i>Клуб</a></li>
+      <li><a href="pokaz.html"><i>07</i>Частный показ</a></li>
+    </ol>
+  </nav>
+  <p class="curtain__foot cap">Мыс Светлый · показы по записи</p>
+</div>
+
+<main id="top">
+<!-- Экран 1. Фасад с выносками (DIZAJN 3.2): Берилл с воды утром (exterior v1), четыре выноски по одной при прокрутке -->
+<section class="fasad plate" id="fasad">
+  <div class="fasad__pin">
+    <figure class="fasad__photo" id="fasadPhoto">
+      <img src="assets/img/exterior.webp" width="2200" height="943" alt="Вилла с воды ранним утром. Стеклянная грань и травертин на гранитном уступе, над озером туман" fetchpriority="high" decoding="async">
+      <!-- точки выносок в процентах исходного кадра 2200×943, экранные координаты считает pages/arhitektura.js -->
+      <span class="leader leader--l fasad__ld" data-x="90" data-y="46.7" style="--len:50px"><span class="leader__t"><i>1</i>Травертин, плиты 40&nbsp;мм</span></span>
+      <span class="leader leader--l fasad__ld" data-x="61" data-y="45.5" style="--len:110px"><span class="leader__t"><i>2</i>Стеклянная грань, 4,2&nbsp;м в высоту</span></span>
+      <span class="leader fasad__ld" data-x="66.2" data-y="38.5" style="--len:70px"><span class="leader__t"><i>3</i>Бронзовый переплёт, 38&nbsp;мм</span></span>
+      <span class="leader leader--l fasad__ld" data-x="49" data-y="58.3" style="--len:60px"><span class="leader__t"><i>4</i>Гранитный уступ под домом</span></span>
+    </figure>
+    <ol class="fasad__list wrap" aria-label="Что на фасаде">
+      <li><i>1</i>Травертин, плиты 40&nbsp;мм</li>
+      <li><i>2</i>Стеклянная грань, 4,2&nbsp;м в высоту</li>
+      <li><i>3</i>Бронзовый переплёт, 38&nbsp;мм</li>
+      <li><i>4</i>Гранитный уступ под домом</li>
+    </ol>
+    <div class="wrap grid plate__top fasad__plate">
+      <h1 class="d1 plate__title">Четыре материала и&nbsp;ничего лишнего</h1>
+      <p class="lead plate__lead">Травертин хранит тепло, стекло пускает свет, бронза чертит линии, а гранит держит дом на скале. Других нам не понадобилось.</p>
+      <dl class="stamp"><div><dt>Лист</dt><dd>02 из 07</dd></div><div><dt>Фасад</dt><dd>вид с воды</dd></div><div><dt>Время</dt><dd>7 утра</dd></div></dl>
+    </div>
+  </div>
+</section>
+
+<!-- Экран 2. Ползунок времени суток (фича 1): одна гостиная в трёх светах, солнце на 20 августа -->
+<section class="sec wrap" id="svet">
+  <div class="sec__head">
+    <h2 class="d2">Один день в&nbsp;гостиной</h2>
+    <p class="lead">Комната одна, меняется только солнце. Сдвиньте время на шкале.</p>
+  </div>
+  <div class="tl" id="tl">
+    <div class="tl__frame" id="tlFrame">
+      <picture><source media="(max-width: 760px)" srcset="assets/img/arhitektura/time-utro-m.webp" width="880" height="1100"><img class="tl__img" src="assets/img/arhitektura/time-utro.webp" width="1920" height="1270" alt="Гостиная со стеклом во всю стену, за окном озеро и острова" loading="lazy" decoding="async"></picture>
+      <picture><source media="(max-width: 760px)" srcset="assets/img/arhitektura/time-den-m.webp" width="880" height="1100"><img class="tl__img" id="tlDen" src="assets/img/arhitektura/time-den.webp" width="1920" height="1270" alt="" loading="lazy" decoding="async"></picture>
+      <picture><source media="(max-width: 760px)" srcset="assets/img/arhitektura/time-vecher-m.webp" width="880" height="1100"><img class="tl__img" id="tlVecher" src="assets/img/arhitektura/time-vecher.webp" width="1920" height="1270" alt="" loading="lazy" decoding="async"></picture>
+    </div>
+    <div class="tl__bar">
+      <p class="tl__time" id="tlTime" aria-hidden="true">07:40</p>
+      <p class="tl__sun ann" id="tlSun" aria-live="polite">&nbsp;</p>
+    </div>
+    <div class="tl__scale" id="tlScale">
+      <div class="tl__ticks" id="tlTicks" aria-hidden="true"></div>
+      <div class="tl__thumb" id="tlThumb" role="slider" tabindex="0" aria-label="Время суток" aria-valuemin="360" aria-valuemax="1320" aria-valuenow="460" aria-valuetext="07:40, утро"><i></i></div>
+    </div>
+    <div class="tl__foot">
+      <p class="tl__moment" id="tlMoment"><b>07:40</b><span>Утро. Солнце ещё низко и&nbsp;кладёт на пол длинные тёплые полосы. Над водой держится туман.</span></p>
+      <p class="cap tl__date">Так солнце стоит над мысом 20&nbsp;августа.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Экран 3. Планшет образцов (фича 2): четыре образца, паспорт выбранного, лупа ×3 -->
+<section class="sec wrap" id="obrazcy">
+  <div class="grid board-grid">
+    <div class="board" id="board">
+      <button type="button" class="smp smp--travertin is-on" data-m="travertin" aria-pressed="true">
+        <picture><source media="(max-width: 760px)" srcset="assets/img/arhitektura/travertin-m.webp"><img src="assets/img/arhitektura/travertin.webp" width="1200" height="1200" alt="Край шлифованной плиты травертина крупным планом" loading="lazy" decoding="async"></picture>
+        <span class="smp__tag"><i>1</i>Травертин</span>
+      </button>
+      <button type="button" class="smp smp--steklo" data-m="steklo" aria-pressed="false">
+        <picture><source media="(max-width: 760px)" srcset="assets/img/arhitektura/steklo-m.webp"><img src="assets/img/arhitektura/steklo.webp" width="1200" height="1200" alt="Кромка стекла в бронзовом профиле крупным планом" loading="lazy" decoding="async"></picture>
+        <span class="smp__tag"><i>2</i>Стекло</span>
+      </button>
+      <button type="button" class="smp smp--bronza" data-m="bronza" aria-pressed="false">
+        <picture><source media="(max-width: 760px)" srcset="assets/img/arhitektura/bronza-m.webp"><img src="assets/img/arhitektura/bronza.webp" width="1200" height="1200" alt="Патина на бронзовом переплёте крупным планом" loading="lazy" decoding="async"></picture>
+        <span class="smp__tag"><i>3</i>Бронза</span>
+      </button>
+      <button type="button" class="smp smp--granit" data-m="granit" aria-pressed="false">
+        <picture><source media="(max-width: 760px)" srcset="assets/img/arhitektura/granit-m.webp"><img src="assets/img/arhitektura/granit.webp" width="1200" height="1200" alt="Розовый гранит на берегу, лишайник и сосновая шишка" loading="lazy" decoding="async"></picture>
+        <span class="smp__tag"><i>4</i>Гранит</span>
+      </button>
+      <div class="loupe" id="loupe" aria-hidden="true"><span class="loupe__lbl">×3</span></div>
+    </div>
+    <aside class="pass" id="pass" aria-live="polite">
+      <h2 class="d2 pass__name" id="passName">Травертин</h2>
+      <dl class="pass__tbl">
+        <div><dt>Откуда</dt><dd id="passFrom">Тиволи, под Римом</dd></div>
+        <div><dt>Размер</dt><dd id="passSize">плиты толщиной 40&nbsp;мм</dd></div>
+        <div><dt>Обработка</dt><dd id="passWork">шлифовка вручную</dd></div>
+        <div><dt>Где в доме</dt><dd id="passWhere">фасад, полы, ванные</dd></div>
+      </dl>
+      <p class="lead pass__line" id="passLine">Один камень снаружи и&nbsp;внутри, и&nbsp;дом выглядит цельным.</p>
+    </aside>
+  </div>
+</section>
+
+<nav class="next wrap" aria-label="Следующий лист"><a href="villy.html"><span class="d2">Лист 03. Генплан</span></a></nav>
+</main>
+
+<footer class="foot">
+  <div class="wrap grid foot__grid">
+    <div class="foot__brand">
+      <p class="foot__logo">ГРАНИ</p>
+      <p class="cap">Клубные виллы на мысе Светлом</p>
+    </div>
+    <nav class="foot__vedom" aria-labelledby="vedom-h">
+      <h2 class="foot__h" id="vedom-h">Ведомость листов</h2>
+      <p class="vedom__head tech" aria-hidden="true"><span>Лист</span><span>Наименование</span></p>
+      <ol class="vedom">
+        <li><a href="index.html"><i>01</i>Общие данные</a></li>
+        <li><a href="arhitektura.html" aria-current="page"><i>02</i>Архитектура и материалы</a></li>
+        <li><a href="villy.html"><i>03</i>Генплан</a></li>
+        <li class="vedom__grp"><span><i>04</i>Виллы</span></li>
+        <li><a href="villa.html?v=kvarc"><i>04.1</i>Кварц</a></li>
+        <li><a href="villa.html?v=berill"><i>04.2</i>Берилл</a></li>
+        <li><a href="villa.html?v=topaz"><i>04.3</i>Топаз</a></li>
+        <li><a href="villa.html?v=opal"><i>04.4</i>Опал</a></li>
+        <li><a href="villa.html?v=agat"><i>04.5</i>Агат</a></li>
+        <li><a href="mesto.html"><i>05</i>Место. Ситуационный план</a></li>
+        <li><a href="klub.html"><i>06</i>Клуб</a></li>
+        <li><a href="pokaz.html"><i>07</i>Частный показ</a></li>
+      </ol>
+    </nav>
+    <dl class="foot__who">
+      <div><dt>Девелопер</dt><dd>«Северный камень»</dd></div>
+      <div><dt>Архитектура</dt><dd>Бюро «Линия воды», Вера Ланская</dd></div>
+    </dl>
+  </div>
+  <p class="wrap foot__demo cap">Демонстрационный проект. Резиденция ГРАНИ вымышлена, сайт создан для портфолио. Планировки, цены, локация и контакты условны.</p>
+</footer>
+
+<script src="assets/js/gsap.min.js" defer></script>
+<script src="assets/js/ScrollTrigger.min.js" defer></script>
+<script src="assets/js/lenis.min.js" defer></script>
+<script type="module" src="assets/js/pages/arhitektura.js"></script>
+</body>
+</html>

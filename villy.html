@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Виллы и генплан · ГРАНИ</title>
+<meta name="description" content="ГРАНИ. Пять вилл из стекла и камня на мысе Светлом. Демо-проект для портфолио.">
+<meta name="theme-color" content="#F4F2ED">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F4F2ED'/%3E%3Cpath d='M16 4 27 12 23 27H9L5 12z' fill='none' stroke='%239C7C4D' stroke-width='1.6'/%3E%3Cpath d='M5 12h22M16 4 12 12l4 15 4-15z' fill='none' stroke='%239C7C4D' stroke-width='1'/%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/forum-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/ysabeau-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/plans.css">
+<link rel="stylesheet" href="assets/css/pages/villy-genplan.css">
+<link rel="stylesheet" href="assets/css/pages/villy.css">
+<script src="assets/js/head.js"></script>
+</head>
+<body data-page="villy">
+
+<div class="veil" aria-hidden="true"><div class="veil__word"><span>Г</span><span>Р</span><span>А</span><span>Н</span><span>И</span></div><div class="veil__bar"><i></i></div></div>
+
+<header class="hdr">
+  <a class="hdr__logo" href="index.html" aria-label="ГРАНИ, на главную">ГРАНИ</a>
+  <nav class="hdr__nav" aria-label="Разделы">
+    <a href="index.html">Главная</a>
+    <a href="arhitektura.html">Архитектура</a>
+    <a href="villy.html" aria-current="page">Виллы<i class="hdr__mark" aria-hidden="true"></i></a>
+    <a href="mesto.html">Место</a>
+    <a href="klub.html">Клуб</a>
+  </nav>
+  <a class="btn btn--line hdr__cta" href="pokaz.html">Частный показ</a>
+  <button class="hdr__burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="curtain"><i></i><i></i></button>
+</header>
+
+<div class="curtain" id="curtain" hidden>
+  <nav aria-label="Листы альбома">
+    <ol class="curtain__list">
+      <li><a href="index.html"><i>01</i>Главная</a></li>
+      <li><a href="arhitektura.html"><i>02</i>Архитектура</a></li>
+      <li><a href="villy.html" aria-current="page"><i>03</i>Виллы</a>
+        <div class="curtain__villas"><a href="villa.html?v=kvarc"><i>04.1</i>Кварц</a><a href="villa.html?v=berill"><i>04.2</i>Берилл</a><a href="villa.html?v=topaz"><i>04.3</i>Топаз</a><a href="villa.html?v=opal"><i>04.4</i>Опал</a><a href="villa.html?v=agat"><i>04.5</i>Агат</a></div>
+      </li>
+      <li><a href="mesto.html"><i>05</i>Место</a></li>
+      <li><a href="klub.html"><i>06</i>Клуб</a></li>
+      <li><a href="pokaz.html"><i>07</i>Частный показ</a></li>
+    </ol>
+  </nav>
+  <p class="curtain__foot cap">Мыс Светлый · показы по записи</p>
+</div>
+
+<main id="top">
+<!-- Экран 1. Генплан на весь экран (DIZAJN 3.3). Карту рисует pages/villy-genplan.js -->
+<section class="gpx" id="genplan" aria-labelledby="gp-h">
+  <div class="gpx__map">
+    <svg class="gpx__svg" id="gp" aria-label="Генплан мыса Светлого: пять участков, клуб и причал"></svg>
+    <div class="gpx__head">
+      <h1 class="d2" id="gp-h">Пять вилл. У&nbsp;каждой свой берег</h1>
+      <p class="cap">Выберите виллу на плане мыса. Покажем этажи, площади и&nbsp;куда смотрят окна.</p>
+    </div>
+    <div class="gpx__scale"><span class="scale" id="gpScale"><span class="scale__bar"><i style="--w:1" data-v="50"></i><i style="--w:1" data-v="100 м"></i></span></span></div>
+  </div>
+  <!-- подпись листа под картой: солнечная диаграмма, примечание, штамп (основная надпись внизу справа, как на чертеже) -->
+  <div class="gpx__strip wrap grid">
+    <figure class="gpx__sun" aria-labelledby="sun-cap">
+      <svg class="gpx__rose" id="gpRose" viewBox="-60 -74 120 134" aria-hidden="true"></svg>
+      <figcaption class="gpx__legend" id="sun-cap"></figcaption>
+    </figure>
+    <p class="gpx__note cap">Все участки смотрят на&nbsp;воду, между соседями не&nbsp;меньше 60&nbsp;м соснового леса.</p>
+    <dl class="stamp gpx__stamp">
+      <div><dt>Лист</dt><dd>03 из 07</dd></div>
+      <div><dt>Масштаб</dt><dd>по линейке</dd></div>
+      <div><dt>Участков</dt><dd>5</dd></div>
+    </dl>
+  </div>
+  <!-- телефон: касание участка открывает панель -->
+  <div class="gpx__panel" id="gpPanel" hidden>
+    <div class="gpx__panel-in">
+      <p class="d3" data-p="name"></p>
+      <p class="ann" data-p="facts"></p>
+      <div class="gpx__panel-ph" data-p="ph"></div>
+      <a class="tick-link" data-p="go" href="villa.html">Открыть виллу</a>
+      <button class="gpx__panel-x" type="button" aria-label="Закрыть"><i></i><i></i></button>
+    </div>
+  </div>
+</section>
+
+<!-- Экран 2. Экспликация вилл (DIZAJN 3.3, экран 2) -->
+<section class="sec wrap" id="eksplikaciya" aria-labelledby="eks-h">
+  <h2 class="d2 eks__h" id="eks-h">Экспликация вилл</h2>
+  <div class="eks" id="eks">
+    <table class="eks__t">
+      <thead><tr><th scope="col">№</th><th scope="col">Вилла</th><th scope="col"><span class="vh">Силуэт</span></th><th scope="col" class="num">Площадь, м²</th><th scope="col" class="num">Этажей</th><th scope="col" class="num">Спален</th><th scope="col" class="num">Участок, сот.</th><th scope="col">Окна на</th><th scope="col">Статус</th><th scope="col"><span class="vh">Открыть</span></th></tr></thead>
+      <tbody id="eksBody"></tbody>
+    </table>
+    <div class="eks__ph" id="eksPh" aria-hidden="true"><img alt="" id="eksImg"></div>
+  </div>
+</section>
+
+<!-- Экран 3. Сравнение двух вилл (фича 3) -->
+<section class="sec wrap" id="sravnenie" aria-labelledby="cmp-h">
+  <div class="cmp__head">
+    <h2 class="d2" id="cmp-h">Две виллы рядом</h2>
+    <p class="txt">Выберите любые две. Подсветим разницу и&nbsp;наложим планы в&nbsp;одном масштабе.</p>
+  </div>
+  <div class="cmp" id="cmp">
+    <div class="cmp__pick">
+      <div class="cmp__tabs" role="radiogroup" aria-label="Слева" data-side="a"><span class="tech">Слева</span></div>
+      <div class="cmp__tabs" role="radiogroup" aria-label="Справа" data-side="b"><span class="tech">Справа</span></div>
+    </div>
+    <table class="cmp__t" aria-live="polite">
+      <thead><tr><th scope="col"><span class="vh">Параметр</span></th><th scope="col" data-c="a"></th><th scope="col" data-c="b"></th></tr></thead>
+      <tbody id="cmpBody"></tbody>
+    </table>
+    <p class="cmp__same cap" id="cmpSame" hidden>Выберите справа другую виллу.</p>
+    <div class="cmp__plans">
+      <div class="cmp__bar">
+        <p class="cap">Первые этажи в&nbsp;одном масштабе. <span id="cmpLegend"></span></p>
+        <div class="cmp__mode" role="radiogroup" aria-label="Как показать планы">
+          <button type="button" role="radio" aria-checked="true" data-m="over">Наложить</button>
+          <button type="button" role="radio" aria-checked="false" data-m="side">Рядом</button>
+        </div>
+      </div>
+      <div class="sheet cmp__sheet is-over" id="cmpSheet">
+        <div class="cmp__fig"><svg id="cmpA" class="cmp__svg cmp__svg--a"></svg></div>
+        <div class="cmp__fig"><svg id="cmpB" class="cmp__svg cmp__svg--b"></svg></div>
+        <span class="scale cmp__scale" id="cmpScale"><span class="scale__bar"><i style="--w:1" data-v="1"></i><i style="--w:1" data-v="2"></i><i style="--w:3" data-v="5 м"></i></span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<nav class="next wrap" aria-label="Следующий лист"><a href="villa.html?v=kvarc"><span class="d2">Лист 04.1. Кварц</span></a></nav>
+</main>
+
+<footer class="foot">
+  <div class="wrap grid foot__grid">
+    <div class="foot__brand">
+      <p class="foot__logo">ГРАНИ</p>
+      <p class="cap">Клубные виллы на мысе Светлом</p>
+    </div>
+    <nav class="foot__vedom" aria-labelledby="vedom-h">
+      <h2 class="foot__h" id="vedom-h">Ведомость листов</h2>
+      <p class="vedom__head tech" aria-hidden="true"><span>Лист</span><span>Наименование</span></p>
+      <ol class="vedom">
+        <li><a href="index.html"><i>01</i>Общие данные</a></li>
+        <li><a href="arhitektura.html"><i>02</i>Архитектура и материалы</a></li>
+        <li><a href="villy.html" aria-current="page"><i>03</i>Генплан</a></li>
+        <li class="vedom__grp"><span><i>04</i>Виллы</span></li>
+        <li><a href="villa.html?v=kvarc"><i>04.1</i>Кварц</a></li>
+        <li><a href="villa.html?v=berill"><i>04.2</i>Берилл</a></li>
+        <li><a href="villa.html?v=topaz"><i>04.3</i>Топаз</a></li>
+        <li><a href="villa.html?v=opal"><i>04.4</i>Опал</a></li>
+        <li><a href="villa.html?v=agat"><i>04.5</i>Агат</a></li>
+        <li><a href="mesto.html"><i>05</i>Место. Ситуационный план</a></li>
+        <li><a href="klub.html"><i>06</i>Клуб</a></li>
+        <li><a href="pokaz.html"><i>07</i>Частный показ</a></li>
+      </ol>
+    </nav>
+    <dl class="foot__who">
+      <div><dt>Девелопер</dt><dd>«Северный камень»</dd></div>
+      <div><dt>Архитектура</dt><dd>Бюро «Линия воды», Вера Ланская</dd></div>
+    </dl>
+  </div>
+  <p class="wrap foot__demo cap">Демонстрационный проект. Резиденция ГРАНИ вымышлена, сайт создан для портфолио. Планировки, цены, локация и контакты условны.</p>
+</footer>
+
+<script src="assets/js/gsap.min.js" defer></script>
+<script src="assets/js/ScrollTrigger.min.js" defer></script>
+<script src="assets/js/lenis.min.js" defer></script>
+<script type="module" src="assets/js/pages/villy.js"></script>
+</body>
+</html>

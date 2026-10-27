@@ -1,0 +1,226 @@
+/* Листы 04.1–04.5, страница виллы (villa.html). Подключается после base.css, plans.css, villy-genplan.css.
+   1 первый экран: фото, точки на фасаде, табличка · 2 галерея и лайтбокс · 3 план · 4 куда смотрят окна ·
+   5 соседи · 6 показ · 7 телефон */
+
+/* пока модуль не вписал виллу из адреса, подписи Кварца не показываем (скрипт в разметке ставит v-wait);
+   страховка: если модуль не пришёл, через 3 с показываем как есть */
+html.v-wait [data-villa]{visibility:hidden;animation:v-wait 0s linear 3s forwards}
+@keyframes v-wait{to{visibility:visible}}
+
+/* ---------- 1. первый экран ---------- */
+.vhero__ph{position:relative;height:clamp(380px,calc(100svh - var(--hdr) - 300px),640px);overflow:hidden;background:var(--sand)}
+.vhero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%}
+/* кадрирование своё у каждой виллы: здесь, а не в данных, чтобы фото встало верно с первого кадра */
+html[data-v="kvarc"] .vhero__img{object-position:50% 44%}
+html[data-v="berill"] .vhero__img{object-position:50% 42%}
+html[data-v="topaz"] .vhero__img{object-position:50% 46%}
+html[data-v="opal"] .vhero__img{object-position:50% 16%}
+html[data-v="agat"] .vhero__img{object-position:50% 46%}
+.vhero .plate{padding-top:28px}
+.villa__name{grid-column:1/6}
+.villa__name .status{margin-top:14px}
+#villa .plate__lead{grid-column:6/10;grid-row:1;align-self:end;padding-bottom:6px}
+#villa .stamp{grid-row:1}
+#villa .chain{margin-top:30px}
+/* слова в цепочке мельче цифр: «открытую воду» у Агата встаёт в одну строку */
+.chain dd.is-word{display:flex;align-items:flex-end;min-height:calc(clamp(1.7rem,2.3vw,2.3rem) * 1);font-size:clamp(1.2rem,1.55vw,1.55rem);line-height:1.05;text-wrap:balance}
+
+/* точки на фасаде: перекрестие 22 px с разрывом, номер помещения в рамке; зона касания 44 px */
+.vhs{position:absolute;inset:0;pointer-events:none}
+.hs{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;padding:0;border:0;background:none;cursor:pointer;pointer-events:auto;opacity:0;transition:opacity .5s var(--ease-out)}
+.vhs.is-in .hs{opacity:1}
+.hs[hidden]{display:none}
+.hs i{position:absolute;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;transition:transform .3s var(--ease-out)}
+.hs i::before,.hs i::after{content:"";position:absolute;background:var(--surface);box-shadow:0 0 0 .5px rgba(26,28,30,.45)}
+.hs i::before{left:0;right:0;top:10.5px;height:1px;-webkit-mask:linear-gradient(90deg,#000 0 8px,transparent 8px 14px,#000 14px);mask:linear-gradient(90deg,#000 0 8px,transparent 8px 14px,#000 14px)}
+.hs i::after{top:0;bottom:0;left:10.5px;width:1px;-webkit-mask:linear-gradient(#000 0 8px,transparent 8px 14px,#000 14px);mask:linear-gradient(#000 0 8px,transparent 8px 14px,#000 14px)}
+.hs b{position:absolute;left:30px;top:-2px;font:italic 600 11px/1 var(--ff-t);color:var(--ink);background:var(--surface);border:1px solid var(--bronze);padding:3px 5px 4px;white-space:nowrap;transition:background-color .25s,color .25s}
+.hs.is-on i,.hs:focus-visible i{transform:rotate(45deg)}
+.hs.is-on i::before,.hs.is-on i::after,.hs:focus-visible i::before,.hs:focus-visible i::after{background:var(--bronze-ink);box-shadow:none}
+.hs.is-on b,.hs:focus-visible b{background:var(--bronze-ink);color:var(--surface);border-color:var(--bronze-ink)}
+.hs:focus-visible{outline:none}
+/* выноска: линия под 45° и полка 120 px к панели */
+.co-ln{position:absolute;width:0;height:0;overflow:visible;pointer-events:none}
+.co-ln svg{position:absolute;left:0;top:0;overflow:visible;max-width:none}
+.co{position:absolute;width:236px;padding:12px;background:var(--surface);border:1px solid var(--line);box-shadow:0 10px 28px rgba(26,28,30,.14);pointer-events:auto;cursor:pointer}
+.co__media{display:block;width:100%;aspect-ratio:3/2;background:var(--bg);overflow:hidden}
+.co__media img{width:100%;height:100%;object-fit:cover}
+.co__media svg{width:100%;height:100%}
+.co__nm{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:10px}
+.co__nm span{font:400 1.25rem/1.05 var(--ff-d)}
+.co__nm i{font:italic 500 .95rem/1 var(--ff-t);color:var(--ink-2);white-space:nowrap}
+.co__sub{margin-top:6px;font:italic 500 13px/1.3 var(--ff-t);color:var(--ink-2)}
+.co__go{display:block;margin-top:6px;font-size:13px;color:var(--muted)}
+/* вырезка плана в панели: только стены и мебель, комната подсвечена */
+.cut .pl-labels,.cut .pl-dims,.cut .pl-north{display:none}
+.vhs-sheet{display:none}
+
+/* ---------- 2. галерея и лайтбокс ---------- */
+.gal{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap);row-gap:48px;align-items:start}
+.gal__f{margin:0;min-width:0}
+.gal__f button{display:block;width:100%;padding:0;border:0;background:var(--sand);cursor:zoom-in;overflow:hidden}
+.gal__f img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease-out)}
+.gal__f button:hover img{transform:scale(1.025)}
+.gal__f figcaption{margin-top:12px;font:italic 500 14px/1.4 var(--ff-t);color:var(--muted);max-width:52ch}
+.gal__f--a{grid-column:1/9}.gal__f--a button{aspect-ratio:3/2}
+.gal__f--b{grid-column:9/13}.gal__f--b button{aspect-ratio:4/5}
+.gal__f--c{grid-column:6/13;grid-row:2}.gal__f--c button{aspect-ratio:16/9}
+.gal__about{max-width:40ch;margin:0}
+.gal__about--c{grid-column:1/6;grid-row:2;align-self:center}
+.gal__about--2{grid-column:1/7}
+
+.lb{position:fixed;inset:0;z-index:60;background:var(--bg);display:grid;grid-template-rows:auto 1fr auto;padding:18px var(--gut) 22px}
+.lb[hidden]{display:none}
+.lb__bar{display:flex;justify-content:space-between;align-items:center;min-height:44px}
+.lb__count{font:italic 500 14px/1 var(--ff-t);color:var(--ink-2)}
+.lb__x{position:relative;width:44px;height:44px;margin-right:-10px;border:0;background:none;cursor:pointer}
+.lb__x i{position:absolute;left:12px;right:12px;top:21px;height:1px;background:var(--ink);transform:rotate(45deg)}
+.lb__x i+i{transform:rotate(-45deg)}
+.lb__stage{position:relative;min-height:0;touch-action:pan-y}
+.lb__img{position:absolute;inset:0;margin:auto;max-width:100%;max-height:100%;width:auto;height:auto;box-shadow:0 10px 28px rgba(26,28,30,.10)}
+.lb__foot{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-top:14px}
+.lb__cap{font:italic 500 15px/1.4 var(--ff-t);color:var(--ink-2);max-width:60ch}
+.lb__nav{display:flex;gap:8px}
+.lb__nav button{width:44px;height:44px;border:1px solid var(--line-2);background:transparent;cursor:pointer;position:relative}
+.lb__nav button::before{content:"";position:absolute;left:50%;top:50%;width:9px;height:9px;border-left:1px solid var(--ink);border-bottom:1px solid var(--ink);transform:translate(-30%,-50%) rotate(45deg)}
+.lb__nav button[data-d="1"]::before{transform:translate(-70%,-50%) rotate(-135deg)}
+.lb__nav button:hover{border-color:var(--bronze)}
+
+/* ---------- 3. план ---------- */
+.vplan{align-items:start}
+.vplan__draw{grid-column:1/9;min-width:0}
+.vplan__side{grid-column:9/13;position:sticky;top:calc(var(--hdr) + 24px)}
+.vtabs{display:flex;gap:28px;border-bottom:1px solid var(--line);margin-bottom:22px}
+.vtabs button{position:relative;border:0;background:none;padding:10px 0 12px;min-height:44px;cursor:pointer;font:500 .95rem/1 var(--ff-t);color:var(--muted);transition:color .25s}
+.vtabs button:hover{color:var(--ink)}
+.vtabs button[aria-selected="true"]{color:var(--ink)}
+.vtabs button[aria-selected="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--bronze)}
+.vplan__sheet{padding:34px 34px 22px}
+.vplan__svg{display:block;width:100%;height:auto;transition:opacity .125s linear}
+.vplan__svg.is-swap{opacity:0}
+.vplan__foot{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-top:22px}
+.vplan__stamp{width:min(300px,100%)}
+.vplan__open{display:none}
+.vplan__now{padding-bottom:22px;border-bottom:1px solid var(--line)}
+.vplan__now .d3{min-height:1.1em}
+.vplan__now .num{margin-top:10px;display:block}
+.vplan__t{width:100%;border-collapse:collapse;margin-top:18px}
+.vplan__t th,.vplan__t td{padding:9px 6px;border-bottom:1px solid var(--line-2);text-align:left;vertical-align:baseline}
+.vplan__t thead th{font:600 11px/1.3 var(--ff-t);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border-bottom-color:var(--ink-2)}
+.vplan__t .r{text-align:right}
+.vplan__t tbody td{font-size:15px;color:var(--ink-2)}
+.vplan__t tbody td:first-child,.vplan__t tbody td.r{font:italic 500 14px/1.3 var(--ff-t);font-variant-numeric:tabular-nums}
+.vplan__t tbody td:first-child{color:var(--muted);width:3.2em}
+.vplan__t tbody tr{cursor:pointer;transition:background-color .2s}
+.vplan__t tbody tr:hover,.vplan__t tbody tr.is-on{background:var(--sel)}
+.vplan__t tbody tr.is-on td:first-child{box-shadow:inset 2px 0 0 var(--bronze)}
+.vplan__t tbody tr.is-deck td{color:var(--muted)}
+.vplan__t tfoot th,.vplan__t tfoot td{border-bottom:0;padding-top:14px;font:500 15px/1.3 var(--ff-t);color:var(--ink)}
+.vplan__t tfoot td.r{font:italic 600 15px/1.3 var(--ff-t)}
+.vplan__deck{margin-top:14px}
+.vplan__deck i{font-style:italic;color:var(--ink-2)}
+/* мелкие помещения: на чертеже только номер в кружке, имя по наведению (DIZAJN 3.4) */
+.pl-lb.vl-small .pl-name,.pl-lb.vl-small .pl-area{opacity:0;transition:opacity .2s}
+.pl-lb.vl-small.pl-lb--hide{opacity:1}
+.pl-lb.vl-small.is-on .pl-name,.pl-lb.vl-small.is-on .pl-area{opacity:1}
+.vl-no{transition:opacity .2s}
+.pl-lb.is-on .vl-no{opacity:0}
+.vl-no circle{fill:var(--surface);stroke:var(--ink-2);stroke-width:.8px}
+.vl-no text{font:italic 600 calc(10.5px * var(--u,.04)) var(--ff-t);fill:var(--ink-2);text-anchor:middle;dominant-baseline:central;stroke:none}
+/* вспышка контура помещения после перехода с фото */
+.vl-flash{fill:none;stroke:var(--bronze);stroke-width:2px;pointer-events:none;animation:vl-flash .9s var(--ease-out) forwards}
+@keyframes vl-flash{from{stroke-width:2px;opacity:1}to{stroke-width:0;opacity:0}}
+/* развернуть план на весь экран (телефон) */
+.vfull{position:fixed;inset:0;z-index:60;background:var(--bg);display:grid;grid-template-rows:auto 1fr}
+.vfull[hidden]{display:none}
+.vfull__bar{display:flex;align-items:center;gap:16px;padding:8px var(--gut);border-bottom:1px solid var(--line)}
+.vfull__bar .vtabs{margin:0;border:0;flex:1}
+.vfull__zoom{display:flex;gap:6px}
+.vfull__zoom button{width:44px;height:44px;border:1px solid var(--line-2);background:transparent;font:400 20px/1 var(--ff-t);color:var(--ink);cursor:pointer}
+.vfull__x{position:relative;width:44px;height:44px;margin-right:-10px;border:0;background:none;cursor:pointer}
+.vfull__x i{position:absolute;left:12px;right:12px;top:21px;height:1px;background:var(--ink);transform:rotate(45deg)}
+.vfull__x i+i{transform:rotate(-45deg)}
+.vfull__scroll{overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:24px}
+.vfull__svg{display:block;width:900px;max-width:none;height:auto}
+
+/* ---------- 4. куда смотрят окна ---------- */
+.vokna{align-items:start;row-gap:32px}
+.vokna__map{grid-column:1/8;position:relative;aspect-ratio:5/4;background:var(--water);border:1px solid var(--line);overflow:hidden}
+.vokna__svg{position:absolute;inset:0;width:100%;height:100%}
+.vokna__scale{position:absolute;right:14px;bottom:10px;padding:8px 26px 2px 12px;background:rgba(244,242,237,.9);box-sizing:content-box}
+.vokna__txt{grid-column:8/13;display:grid;gap:20px;align-content:start}
+.vokna__tabs{margin:8px 0 0}
+.vokna__line{font-size:15px;min-height:1.3em}
+.vokna__t{display:grid;grid-template-columns:auto 1fr;border-top:1px solid var(--ink-2)}
+.vokna__t>div{display:contents}
+.vokna__t dt,.vokna__t dd{padding:10px 0;border-bottom:1px solid var(--line-2)}
+.vokna__t dt{font-size:14px;color:var(--muted);padding-right:24px}
+.vokna__t dd{margin:0;text-align:right;font:italic 500 15px/1.3 var(--ff-t);color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* ---------- 5. соседи ---------- */
+.vnb{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line-2)}
+.vnb__a{display:grid;gap:18px;padding:28px 0 8px;color:var(--ink)}
+.vnb__a:first-child{padding-right:clamp(16px,2vw,32px);border-right:1px solid var(--line-2)}
+.vnb__a:last-child{padding-left:clamp(16px,2vw,32px)}
+.vnb__ph{display:block;aspect-ratio:21/9;overflow:hidden;background:var(--sand);clip-path:inset(4% 4% 4% 4%);transition:clip-path .4s var(--ease-out)}
+.vnb__a:hover .vnb__ph,.vnb__a:focus-visible .vnb__ph{clip-path:inset(0)}
+.vnb__ph img{width:100%;height:100%;object-fit:cover}
+.vnb__meta{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:18px}
+.vnb__meta .tech{grid-column:1/-1}
+.vnb__meta .d2{transition:color .3s}
+.vnb__a:hover .d2{color:var(--bronze-ink)}
+.vnb__sil polygon{fill:var(--poche)}
+.vnb__tick{width:34px;height:9px;background:linear-gradient(var(--bronze),var(--bronze)) left center/100% 1px no-repeat,linear-gradient(-45deg,transparent 44%,var(--bronze) 44% 58%,transparent 58%) right center/9px 9px no-repeat;transition:transform .35s var(--ease-out)}
+.vnb__a:hover .vnb__tick{transform:translateX(6px)}
+
+/* ---------- 6. показ ---------- */
+.vbook{display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.vbook__line{max-width:46ch}
+
+/* ---------- 7. планшет и телефон ---------- */
+@media (max-width:980px){
+  .villa__name,#villa .plate__lead{grid-column:1/-1;grid-row:auto}
+  #villa .stamp{grid-row:auto}
+  .vplan__draw,.vplan__side{grid-column:1/-1}
+  .vplan__side{position:static}
+  .vokna__map,.vokna__txt{grid-column:1/-1}
+}
+@media (max-width:760px){
+  .vhero__ph{height:52svh;min-height:300px}
+  html[data-v="kvarc"] .vhero__img{object-position:70% 50%}
+  html[data-v="berill"] .vhero__img{object-position:30% 50%}
+  html[data-v="topaz"] .vhero__img{object-position:36% 50%}
+  html[data-v="opal"] .vhero__img{object-position:80% 50%}
+  html[data-v="agat"] .vhero__img{object-position:32% 50%}
+  .vhero .plate{padding-top:24px}
+  .villa__name .status{margin-top:10px}
+  #villa .plate__lead{padding:0}
+  #villa .chain{margin-top:24px}
+  .chain dd.is-word{min-height:0;font-size:1.3rem}
+  .co,.co-ln{display:none}
+  /* панель точки под фото: мини-фото 96 px, имя, площадь, «На плане» */
+  .vhs-sheet{display:grid;grid-template-columns:96px 1fr;gap:4px 14px;align-items:center;padding:12px var(--gut);background:var(--surface);border-bottom:1px solid var(--line)}
+  .vhs-sheet[hidden]{display:none}
+  .vhs-sheet .co__media{grid-row:1/4;width:96px}
+  .vhs-sheet .co__nm{margin:0}
+  .vhs-sheet .co__sub{margin:0}
+  .vhs-sheet .co__go{justify-self:start;margin:0;display:inline-flex;align-items:center;min-height:40px;padding:0;border:0;background:none;cursor:pointer;font:500 12px/1 var(--ff-t);letter-spacing:.12em;text-transform:uppercase;color:var(--bronze-ink)}
+  .gal{row-gap:28px}
+  .gal__f--a,.gal__f--b,.gal__f--c{grid-column:1/-1;grid-row:auto}
+  .gal__f--b button{aspect-ratio:4/5}
+  .gal__about--c,.gal__about--2{grid-column:1/-1;grid-row:auto}
+  .vplan__sheet{padding:18px 14px 16px}
+  .vplan__foot{flex-direction:column;align-items:stretch}
+  .vplan__stamp{width:100%}
+  .vplan__open{display:inline-flex;margin-top:10px}
+  .vtabs{gap:22px}
+  .vnb{grid-template-columns:1fr}
+  .vnb__a:first-child{padding-right:0;border-right:0;border-bottom:1px solid var(--line-2);padding-bottom:24px}
+  .vnb__a:last-child{padding-left:0}
+  .vnb__meta .d2{font-size:1.8rem}
+  .vbook{flex-direction:column;align-items:stretch}
+  .vbook .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){.hs,.gal__f img,.vnb__ph,.vplan__svg{transition:none}}
+.vplan__open{border:0;background:none;padding:0;cursor:pointer}
+@media (max-width:980px){.vplan__side{margin-top:28px}}

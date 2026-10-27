@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вилла «Кварц» · ГРАНИ</title>
+<meta name="description" content="ГРАНИ. Пять вилл из стекла и камня на мысе Светлом. Демо-проект для портфолио.">
+<meta name="theme-color" content="#F4F2ED">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F4F2ED'/%3E%3Cpath d='M16 4 27 12 23 27H9L5 12z' fill='none' stroke='%239C7C4D' stroke-width='1.6'/%3E%3Cpath d='M5 12h22M16 4 12 12l4 15 4-15z' fill='none' stroke='%239C7C4D' stroke-width='1'/%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/forum-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/ysabeau-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/plans.css">
+<link rel="stylesheet" href="assets/css/pages/villy-genplan.css">
+<link rel="stylesheet" href="assets/css/pages/villa.css">
+<script src="assets/js/head.js"></script>
+</head>
+<body data-page="villa">
+
+<div class="veil" aria-hidden="true"><div class="veil__word"><span>Г</span><span>Р</span><span>А</span><span>Н</span><span>И</span></div><div class="veil__bar"><i></i></div></div>
+
+<header class="hdr">
+  <a class="hdr__logo" href="index.html" aria-label="ГРАНИ, на главную">ГРАНИ</a>
+  <nav class="hdr__nav" aria-label="Разделы">
+    <a href="index.html">Главная</a>
+    <a href="arhitektura.html">Архитектура</a>
+    <a href="villy.html" aria-current="page">Виллы<i class="hdr__mark" aria-hidden="true"></i></a>
+    <a href="mesto.html">Место</a>
+    <a href="klub.html">Клуб</a>
+  </nav>
+  <a class="btn btn--line hdr__cta" href="pokaz.html">Частный показ</a>
+  <button class="hdr__burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="curtain"><i></i><i></i></button>
+</header>
+
+<div class="curtain" id="curtain" hidden>
+  <nav aria-label="Листы альбома">
+    <ol class="curtain__list">
+      <li><a href="index.html"><i>01</i>Главная</a></li>
+      <li><a href="arhitektura.html"><i>02</i>Архитектура</a></li>
+      <li><a href="villy.html"><i>03</i>Виллы</a>
+        <div class="curtain__villas"><a href="villa.html?v=kvarc" aria-current="page"><i>04.1</i>Кварц</a><a href="villa.html?v=berill"><i>04.2</i>Берилл</a><a href="villa.html?v=topaz"><i>04.3</i>Топаз</a><a href="villa.html?v=opal"><i>04.4</i>Опал</a><a href="villa.html?v=agat"><i>04.5</i>Агат</a></div>
+      </li>
+      <li><a href="mesto.html"><i>05</i>Место</a></li>
+      <li><a href="klub.html"><i>06</i>Клуб</a></li>
+      <li><a href="pokaz.html"><i>07</i>Частный показ</a></li>
+    </ol>
+  </nav>
+  <p class="curtain__foot cap">Мыс Светлый · показы по записи</p>
+</div>
+
+<main id="top">
+<!-- Экран 1. Фото и табличка, вариант Б (DIZAJN 3.4). Имя, статус, строка, штамп, цепочку, точки на фасаде
+     подставляет pages/villa.js по ?v=. В разметке Кварц (он же для пустого и неверного кода).
+     Скрипт ниже выполняется до первой отрисовки: ставит нужное фото и прячет подписи Кварца,
+     пока модуль не впишет свою виллу (иначе на долю секунды мелькал Кварц). -->
+<section class="vhero" id="villa">
+  <div class="vhero__ph" id="vPh">
+    <img class="vhero__img" id="vImg" alt="" fetchpriority="high" decoding="async">
+    <script>(function(){var C=['kvarc','berill','topaz','opal','agat'],c=new URLSearchParams(location.search).get('v');if(C.indexOf(c)<0)c='kvarc';var d=document.documentElement;d.setAttribute('data-v',c);if(c!=='kvarc')d.classList.add('v-wait');document.getElementById('vImg').src='assets/img/villy/'+c+'-ext'+(matchMedia('(max-width:760px)').matches?'-m':'')+'.webp';})();</script>
+    <noscript><img class="vhero__img" src="assets/img/villy/kvarc-ext.webp" alt=""></noscript>
+    <div class="vhs" id="vHs"></div>
+  </div>
+  <div class="vhs-sheet" id="vHsSheet" hidden></div>
+  <div class="plate wrap">
+    <div class="grid plate__top">
+      <div class="plate__title villa__name">
+        <h1 class="d1" data-villa="name">Кварц</h1>
+        <p class="status" data-villa="status">свободна</p>
+      </div>
+      <p class="lead plate__lead" data-villa="line">Рассветная. Окна на&nbsp;восток, кухня встречает солнце первой.</p>
+      <dl class="stamp">
+        <div><dt>Лист</dt><dd data-villa="sheet">04.1 из 07</dd></div>
+        <div><dt>Окна на</dt><dd data-villa="view">восток, азимут 90°</dd></div>
+        <div><dt data-villa="sunk">Восход завтра</dt><dd data-villa="sunv">08:02</dd></div>
+      </dl>
+    </div>
+    <dl class="chain" data-villa="chain">
+      <div><dt>площадь</dt><dd>248<i>м²</i></dd></div>
+      <div><dt>этажа</dt><dd>2</dd></div>
+      <div><dt>спальни</dt><dd>3</dd></div>
+      <div><dt>участок</dt><dd>18<i>сот.</i></dd></div>
+      <div><dt>потолки</dt><dd>4,2<i>м</i></dd></div>
+      <div><dt>окна на</dt><dd class="is-word">восток</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- Экран 2. Галерея и описание -->
+<section class="sec wrap" id="galereya" aria-label="Фотографии виллы">
+  <div class="gal" id="gal"></div>
+  <p class="lead gal__about" data-villa="about">Мы поставили Кварц на&nbsp;восточный край мыса, и&nbsp;первое солнце достаётся ему. Оно встаёт над заливом и&nbsp;через гранёное стекло входит прямо в&nbsp;кухню. Спальня хозяев наверху смотрит туда же, на&nbsp;восход.</p>
+</section>
+
+<!-- Экран 3. План: лист чертежа (1–8) из plans.js, табы этажей, экспликация помещений (9–12, липко) -->
+<section class="sec wrap" id="plan" aria-labelledby="plan-h">
+  <h2 class="vh" id="plan-h">Планы этажей</h2>
+  <div class="grid vplan">
+    <div class="vplan__draw">
+      <div class="vplan__tabs vtabs" role="tablist" aria-label="Этаж" id="vFloors"></div>
+      <div class="sheet vplan__sheet">
+        <svg id="vPlan" class="vplan__svg"></svg>
+        <div class="vplan__foot">
+          <span class="scale" id="vScale"><span class="scale__bar"><i style="--w:1" data-v="1"></i><i style="--w:1" data-v="2"></i><i style="--w:3" data-v="5 м"></i></span></span>
+          <dl class="stamp vplan__stamp">
+            <div><dt>Вилла</dt><dd data-villa="pname">Кварц</dd></div>
+            <div><dt>Лист</dt><dd data-villa="psheet">04.1, план 1 этажа</dd></div>
+            <div><dt>Масштаб</dt><dd>по линейке</dd></div>
+          </dl>
+        </div>
+      </div>
+      <button class="tick-link vplan__open" type="button" id="vOpen">На весь экран</button>
+    </div>
+    <aside class="vplan__side">
+      <div class="vplan__now" aria-live="polite">
+        <p class="d3" id="vRoomName">1 этаж</p>
+        <p class="num" id="vRoomArea">130,3<i>м²</i></p>
+      </div>
+      <table class="vplan__t">
+        <thead><tr><th scope="col">№</th><th scope="col">Помещение</th><th scope="col" class="r">м²</th></tr></thead>
+        <tbody id="vRooms"></tbody>
+        <tfoot><tr><td></td><th scope="row" id="vTotalK">1 этаж</th><td class="r" id="vTotal">130,3</td></tr></tfoot>
+      </table>
+      <p class="cap vplan__deck" id="vDeck"></p>
+    </aside>
+  </div>
+  <div class="vfull" id="vFull" hidden>
+    <div class="vfull__bar">
+      <div class="vtabs" id="vFullFloors"></div>
+      <div class="vfull__zoom"><button type="button" data-z="-1" aria-label="Мельче">−</button><button type="button" data-z="1" aria-label="Крупнее">+</button></div>
+      <button class="vfull__x" type="button" aria-label="Закрыть"><i></i><i></i></button>
+    </div>
+    <div class="vfull__scroll" id="vFullScroll"><svg id="vFullPlan" class="vfull__svg"></svg></div>
+  </div>
+</section>
+
+<!-- Экран 4. Куда смотрят окна: генплан у виллы, веер, лучи солнца сегодня / июнь / декабрь -->
+<section class="sec wrap" id="okna" aria-labelledby="okna-h">
+  <div class="grid vokna">
+    <div class="vokna__map"><svg id="vMap" class="vokna__svg" aria-label="Вилла на генплане мыса, сектор обзора из окон и направления солнца"></svg>
+      <span class="scale vokna__scale" id="vMapScale"><span class="scale__bar"><i style="--w:1" data-v="50"></i><i style="--w:1" data-v="100 м"></i></span></span>
+    </div>
+    <div class="vokna__txt">
+      <h2 class="d2" id="okna-h">Куда смотрят окна</h2>
+      <p class="txt" data-villa="okna">Окна смотрят на&nbsp;восток, на&nbsp;залив. В&nbsp;марте и&nbsp;сентябре солнце встаёт прямо напротив, летом левее, ближе к&nbsp;северу.</p>
+      <div class="vtabs vokna__tabs" role="tablist" aria-label="День" id="vSunTabs">
+        <button type="button" role="tab" aria-selected="true" data-d="today">сегодня</button>
+        <button type="button" role="tab" aria-selected="false" data-d="june">июнь</button>
+        <button type="button" role="tab" aria-selected="false" data-d="dec">декабрь</button>
+      </div>
+      <p class="ann vokna__line" id="vSunLine" aria-live="polite"></p>
+      <dl class="vokna__t" id="vOknaT"></dl>
+    </div>
+  </div>
+</section>
+
+<!-- Экран 5. Соседние виллы: предыдущий и следующий лист по кругу -->
+<nav class="sec wrap" id="sosedi" aria-label="Соседние виллы">
+  <div class="vnb" id="vNb"></div>
+</nav>
+
+<!-- Экран 6. Позвать на показ -->
+<section class="sec wrap vbook" id="na-pokaz">
+  <p class="lead vbook__line" id="vBookLine"></p>
+  <a class="btn btn--solid" data-villa="book" href="pokaz.html?v=kvarc">Посмотреть эту виллу вживую</a>
+</section>
+
+<nav class="next wrap" aria-label="Следующий лист"><a href="villa.html?v=berill" data-villa="next"><span class="d2">Лист 04.2. Берилл</span></a></nav>
+</main>
+
+<footer class="foot">
+  <div class="wrap grid foot__grid">
+    <div class="foot__brand">
+      <p class="foot__logo">ГРАНИ</p>
+      <p class="cap">Клубные виллы на мысе Светлом</p>
+    </div>
+    <nav class="foot__vedom" aria-labelledby="vedom-h">
+      <h2 class="foot__h" id="vedom-h">Ведомость листов</h2>
+      <p class="vedom__head tech" aria-hidden="true"><span>Лист</span><span>Наименование</span></p>
+      <ol class="vedom">
+        <li><a href="index.html"><i>01</i>Общие данные</a></li>
+        <li><a href="arhitektura.html"><i>02</i>Архитектура и материалы</a></li>
+        <li><a href="villy.html"><i>03</i>Генплан</a></li>
+        <li class="vedom__grp"><span><i>04</i>Виллы</span></li>
+        <li><a href="villa.html?v=kvarc" aria-current="page"><i>04.1</i>Кварц</a></li>
+        <li><a href="villa.html?v=berill"><i>04.2</i>Берилл</a></li>
+        <li><a href="villa.html?v=topaz"><i>04.3</i>Топаз</a></li>
+        <li><a href="villa.html?v=opal"><i>04.4</i>Опал</a></li>
+        <li><a href="villa.html?v=agat"><i>04.5</i>Агат</a></li>
+        <li><a href="mesto.html"><i>05</i>Место. Ситуационный план</a></li>
+        <li><a href="klub.html"><i>06</i>Клуб</a></li>
+        <li><a href="pokaz.html"><i>07</i>Частный показ</a></li>
+      </ol>
+    </nav>
+    <dl class="foot__who">
+      <div><dt>Девелопер</dt><dd>«Северный камень»</dd></div>
+      <div><dt>Архитектура</dt><dd>Бюро «Линия воды», Вера Ланская</dd></div>
+    </dl>
+  </div>
+  <p class="wrap foot__demo cap">Демонстрационный проект. Резиденция ГРАНИ вымышлена, сайт создан для портфолио. Планировки, цены, локация и контакты условны.</p>
+</footer>
+
+<script src="assets/js/gsap.min.js" defer></script>
+<script src="assets/js/ScrollTrigger.min.js" defer></script>
+<script src="assets/js/lenis.min.js" defer></script>
+<script type="module" src="assets/js/pages/villa.js"></script>
+</body>
+</html>
