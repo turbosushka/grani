@@ -1,12 +1,12 @@
 // Лист 01, главная (index.html). Экран 1: кристалл gem.js (час из часов на мысе) и дуга солнца
-// на сегодня, раз в минуту. Экран 2: пять вилл подряд, у каждой короткая петля подлёта (играет сама,
-// пока блок на экране) и ссылка на лист виллы. Экран 3: генплан в лёгком режиме и экспликация.
+// на сегодня, раз в минуту. Экран 2: пять вилл подряд, фото снаружи во весь экран с лёгким параллаксом,
+// имя и строка, весь блок ведёт на лист виллы. Экран 3: генплан в лёгком режиме и экспликация.
 // Экран 4: свет по часам, одна гостиная в трёх светах, час идёт по прокрутке (на телефоне и при
 // reduced-motion шкалу тянут). Экран 5: туман v1. Экран 6: ведомость.
 import { gsap, ScrollTrigger, reduced, phone, ready, $, $$ } from '../site.js';
 import { createGem } from '../gem.js';
 import { sunPos, sunTimes, capeHM, hm } from '../sun.js';
-import { VILLAS, bedsWord, statusWord } from '../villas.js';
+import { VILLAS, bedsWord, statusWord, imgSrc, imgSet } from '../villas.js';
 import { T0, T1, MOMENTS, fmt, part, clamp, nearest, gemHour, blend, buildTicks, bindScale } from './svet.js';
 
 const capeMin = (d = new Date()) => { const { h, m } = capeHM(d); return h * 60 + m; };
@@ -18,44 +18,40 @@ const svgEl = (parent, tag, a, txt) => {
   parent.appendChild(n); return n;
 };
 
-/* ---------- экран 2: пять вилл, петли подлёта ----------
+/* ---------- экран 2: пять вилл, фото снаружи ----------
    Блоки строятся первыми, до триггеров: от их высоты зависят все закрепления ниже.
-   Загрузка: ничего до первой прокрутки (первый блок стоит сразу под героем), дальше постер за
-   полтора экрана, видео за полэкрана. Играет только блок на экране, ушедший ставится на паузу.
-   reduced-motion: только постер. Пока у виллы нет петли (petlya: false), стоит постер её пролёта. */
-const loopsEl = $('#villy5'), loops = [];
-if (loopsEl) {
-  VILLAS.forEach((v) => {
+   Фото те же, что на листе виллы (img/villy/<код>-ext и -m), браузер выбирает по srcset: на телефоне
+   блок высокий и узкий, кадр по ширине выходит больше экрана, поэтому sizes считает от высоты.
+   Грузятся за полэкрана до блока (первый блок стоит под героем, он приходит с первой загрузкой).
+   Движение: кадр выше блока на 12 % и сдвигается на ±5 % за проход блока по экрану, с лёгким
+   отъездом 1,06 → 1 (только transform, scrub). Наведение мышью приближает кадр (CSS).
+   reduced-motion: без движения. */
+const blkEl = $('#villy5');
+if (blkEl) {
+  const blks = VILLAS.map((v) => {
     const a = document.createElement('a');
-    a.className = 'loop'; a.href = `villa.html?v=${v.code}`;
-    a.innerHTML = `<video class="loop__v" muted playsinline loop preload="none" disablepictureinpicture aria-hidden="true"></video>`
-      + `<span class="loop__cap wrap"><span class="tech loop__no">Лист ${v.sheet}</span><span class="d1 loop__name"></span>`
-      + `<span class="lead loop__line"></span><i class="loop__tick" aria-hidden="true"></i></span>`;
-    $('video', a).muted = true; // iOS играет сам только беззвучное
-    $('.loop__name', a).textContent = v.name;
-    $('.loop__line', a).textContent = v.line;
-    const m = phone ? '-m' : '', base = v.petlya ? `assets/video/petlya-${v.code}` : `assets/video/prolet-${v.code}`;
-    loops.push({ a, v: $('video', a), poster: `${base}-poster${m}.webp`, src: v.petlya && !reduced ? `${base}${m}.mp4` : null, on: false });
-    loopsEl.append(a);
+    a.className = 'vblk'; a.href = `villa.html?v=${v.code}`; a.dataset.v = v.code;
+    a.innerHTML = `<span class="vblk__ph"><img class="vblk__img" alt="" decoding="async"></span>`
+      + `<span class="vblk__cap wrap"><span class="tech vblk__no">Лист ${v.sheet}</span><span class="d1 vblk__name"></span>`
+      + `<span class="lead vblk__line"></span><i class="vblk__tick" aria-hidden="true"></i></span>`;
+    $('.vblk__name', a).textContent = v.name;
+    $('.vblk__line', a).textContent = v.line;
+    blkEl.append(a);
+    return { a, v, ph: $('.vblk__ph', a), img: $('img', a) };
   });
-  const watch = (margin, fn, threshold = 0) => {
-    const io = new IntersectionObserver((es) => es.forEach((e) => fn(loops.find((l) => l.a === e.target), e)), { rootMargin: margin + ' 0px', threshold });
-    loops.forEach((l) => io.observe(l.a));
-  };
-  const start = () => {
-    watch('150%', (l, e) => { if (e.isIntersecting && !l.v.poster) l.v.poster = l.poster; });
-    watch('50%', (l, e) => {
-      if (!e.isIntersecting || !l.src || l.v.src) return;
-      l.v.src = l.src; l.v.preload = 'auto';
-      if (l.on) l.v.play().catch(() => {});
-    });
-    watch('0px', (l, e) => {
-      l.on = e.isIntersecting;
-      if (!l.v.src) return;
-      if (l.on) l.v.play().catch(() => {}); else l.v.pause();
-    }, 0.15);
-  };
-  if (scrollY > 0) start(); else addEventListener('scroll', start, { once: true, passive: true });
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    io.unobserve(e.target);
+    const b = blks.find((x) => x.a === e.target);
+    b.img.sizes = '(max-width: 760px) calc((100vh - 60px) * 1.12 * 1.51), 100vw';
+    b.img.srcset = imgSet(b.v.code + '-ext');
+    b.img.src = imgSrc(b.v.code + '-ext');
+  }), { rootMargin: '50% 0px' });
+  blks.forEach((b) => io.observe(b.a));
+  if (!reduced) blks.forEach((b) => gsap.fromTo(b.ph, { yPercent: -5, scale: 1.06 }, {
+    yPercent: 5, scale: 1, ease: 'none',
+    scrollTrigger: { trigger: b.a, start: 'top bottom', end: 'bottom top', scrub: true },
+  }));
 }
 
 /* ---------- кристалл ---------- */

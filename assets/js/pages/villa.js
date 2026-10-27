@@ -209,10 +209,11 @@ shots.forEach((g, i) => {
   const im = document.createElement('img');
   im.loading = 'lazy'; im.decoding = 'async'; // до src, иначе кадр качается сразу
   // браузер сам берёт лёгкую или полную версию по ширине кадра и плотности экрана
-  im.sizes = ['(max-width: 760px) 100vw, 62vw', '(max-width: 760px) 100vw, 30vw', '(max-width: 760px) 100vw, 54vw'][i];
+  im.sizes = ['(max-width: 760px) 100vw, 44vw', '(max-width: 760px) 100vw, 38vw', '(max-width: 760px) 100vw, 54vw'][i];
   im.srcset = imgSet(g.img); im.src = imgSrc(g.img, true);
   im.alt = g.cap;
   if (g.pos) im.style.objectPosition = g.pos;
+  if (g.ar) b.style.aspectRatio = g.ar;
   b.append(im);
   b.addEventListener('click', () => openLb(i, im));
   const c = document.createElement('figcaption'); c.textContent = g.cap;
@@ -255,6 +256,7 @@ function fill(i) {
   const g = shots[lbI];
   const im = $('.lb__img', lb);
   im.src = imgSrc(g.img, narrow.matches); im.alt = g.cap;
+  im.classList.toggle('lb__img--soft', !!g.soft); // кадр из пролёта мягче фото: не шире половины экрана
   $('.lb__cap', lb).textContent = g.cap;
   $('.lb__count', lb).textContent = `${lbI + 1} из ${shots.length}`;
   return im;
