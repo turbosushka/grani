@@ -1,5 +1,6 @@
 // Листы 04.1–04.5, страница виллы (villa.html?v=код). Пустой или неверный код → Кварц.
-// Экраны: 1 фото с точками на фасаде и табличка · 2 галерея с лайтбоксом и описание · 3 план (villa-plan.js) ·
+// Экраны: 1 фото с точками на фасаде и табличка · 2 галерея с лайтбоксом и описание ·
+// пролёт камеры, если у виллы есть видео (villa-prolet.js) · 3 план (villa-plan.js) ·
 // 4 «Куда смотрят окна» (генплан у виллы, villy-genplan.js) · 5 соседние виллы · 6 позвать на показ.
 // Все цифры из данных: villas.js, plans.js (площади, номера помещений), sun.js (восход и закат).
 import { gsap, reduced, lenis, scrollToEl, $, $$ } from '../site.js';
@@ -8,6 +9,7 @@ import { fmtArea } from '../plans.js';
 import { sunTimes, capeDate, capeDay, hm, dur, capeHM } from '../sun.js';
 import { drawGenplan, silhouette } from './villy-genplan.js';
 import { initPlan } from './villa-plan.js';
+import { initProlet } from './villa-prolet.js';
 
 const v = villaByCode(new URLSearchParams(location.search).get('v'));
 const idx = VILLAS.indexOf(v);
@@ -37,6 +39,9 @@ set('sunv', hm(side === 'rise' ? tomorrow.rise : tomorrow.set));
 set('about', v.about);
 set('okna', v.okna);
 set('pname', v.name);
+set('fsheet', `${v.sheet}, пролёт`);
+set('fview', `${v.view}, азимут ${az}°`);
+set('fwater', v.water);
 const status = $('[data-villa="status"]');
 status.textContent = statusWord(v);
 status.classList.toggle('status--res', v.res);
@@ -75,6 +80,9 @@ $$('a[href^="villa.html?v="]').forEach((a) => {
   else a.removeAttribute('aria-current');
 });
 html.classList.remove('v-wait');
+
+/* ---------- пролёт: до плана, чтобы закрепление уже раздвинуло страницу, когда точки ведут к плану ---------- */
+initProlet(v);
 
 /* ---------- экран 3: план (раньше точек: точки ведут к нему) ---------- */
 const plan = initPlan(v);
@@ -334,9 +342,9 @@ const arrive = (set) => { const { h, m } = capeHM(new Date(+set - 75 * 60000)); 
 const early = capeHM(tomorrow.rise).h < 7;
 $('#vBookLine').textContent = side === 'rise'
   ? (early
-    ? `Завтра солнце встанет в ${hm(tomorrow.rise)}. Приезжайте к семи, покажем дом в утреннем свете.`
-    : `Завтра солнце встанет в ${hm(tomorrow.rise)}. Приезжайте к восходу.`)
-  :`Завтра солнце сядет в ${hm(tomorrow.set)}. Приезжайте к ${arrive(tomorrow.set)}, покажем дом и закат.`;
+    ? `Завтра солнце встанет в ${hm(tomorrow.rise)}. Встретим вас у ворот в семь и покажем дом в утреннем свете.`
+    : `Завтра солнце встанет в ${hm(tomorrow.rise)}. Покажем дом на восходе.`)
+  :`Завтра солнце сядет в ${hm(tomorrow.set)}. Встретим вас у ворот в ${arrive(tomorrow.set)} и покажем дом на закате.`;
 
 /* ---------- адрес вида #pom-1-8: сразу к помещению ---------- */
 const m = /^#pom-(\d+)-(\d+)$/.exec(location.hash);

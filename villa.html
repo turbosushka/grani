@@ -65,13 +65,14 @@
     <div class="grid plate__top">
       <div class="plate__title villa__name">
         <h1 class="d1" data-villa="name">Кварц</h1>
-        <p class="status" data-villa="status">свободна</p>
+        <p class="status" data-villa="status">в продаже</p>
       </div>
       <p class="lead plate__lead" data-villa="line">Рассветная. Окна на&nbsp;восток, кухня встречает солнце первой.</p>
       <dl class="stamp">
         <div><dt>Лист</dt><dd data-villa="sheet">04.1 из 07</dd></div>
         <div><dt>Окна на</dt><dd data-villa="view">восток, азимут 90°</dd></div>
         <div><dt data-villa="sunk">Восход завтра</dt><dd data-villa="sunv">08:02</dd></div>
+        <div><dt>Цена</dt><dd>по запросу</dd></div>
       </dl>
     </div>
     <dl class="chain" data-villa="chain">
@@ -89,6 +90,26 @@
 <section class="sec wrap" id="galereya" aria-label="Фотографии виллы">
   <div class="gal" id="gal"></div>
   <p class="lead gal__about" data-villa="about">Мы поставили Кварц на&nbsp;восточный край мыса, и&nbsp;первое солнце достаётся ему. Оно встаёт над заливом и&nbsp;через гранёное стекло входит прямо в&nbsp;кухню. Спальня хозяев наверху смотрит туда же, на&nbsp;восход.</p>
+</section>
+
+<!-- Пролёт: камера с воды через стекло в дом и разворот к виду, видео перематывается прокруткой.
+     Скрыт, пока у виллы нет своего видео (prolet в villas.js). Включает и грузит pages/villa-prolet.js -->
+<section class="vfly" id="prolet" aria-labelledby="prolet-h" hidden>
+  <div class="vfly__pin">
+    <div class="vfly__frame">
+      <video class="vfly__video" id="vFlyV" muted playsinline preload="none" disablepictureinpicture aria-label="Камера подлетает к вилле, входит в дом и разворачивается к виду из окон"></video>
+      <div class="vfly__bar" aria-hidden="true"><i id="vFlyBar"></i></div>
+    </div>
+    <div class="wrap grid vfly__cap">
+      <h2 class="d2 vfly__h" id="prolet-h">Дом изнутри</h2>
+      <p class="lead vfly__line">Подлетаем, входим и&nbsp;разворачиваемся к&nbsp;окнам. Ради этого вида мы и&nbsp;строили.</p>
+      <dl class="stamp vfly__stamp">
+        <div><dt>Лист</dt><dd data-villa="fsheet">04.1, пролёт</dd></div>
+        <div><dt>Окна на</dt><dd data-villa="fview">восток, азимут 90°</dd></div>
+        <div><dt>Вид</dt><dd data-villa="fwater">залив</dd></div>
+      </dl>
+    </div>
+  </div>
 </section>
 
 <!-- Экран 3. План: лист чертежа (1–8) из plans.js, табы этажей, экспликация помещений (9–12, липко) -->
