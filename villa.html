@@ -49,24 +49,43 @@
 </div>
 
 <main id="top">
-<!-- Экран 1. Фото и табличка, вариант Б (DIZAJN 3.4). Имя, статус, строка, штамп, цепочку, точки на фасаде
-     подставляет pages/villa.js по ?v=. В разметке Кварц (он же для пустого и неверного кода).
-     Скрипт ниже выполняется до первой отрисовки: ставит нужное фото и прячет подписи Кварца,
-     пока модуль не впишет свою виллу (иначе на долю секунды мелькал Кварц). -->
+<!-- Экран 1. Название и пролёт камеры: снаружи через стекло в дом и разворот к виду, видео перематывается
+     прокруткой (pages/villa-prolet.js, грузится сразу). Имя и статус подставляет pages/villa.js по ?v=,
+     в разметке Кварц (он же для пустого и неверного кода). Скрипт ниже выполняется до первой отрисовки:
+     ставит код виллы, постер её пролёта и прячет подписи Кварца, пока модуль не впишет свою виллу. -->
+<section class="vfly" id="prolet" aria-labelledby="prolet-h">
+  <div class="vfly__pin">
+    <div class="vfly__frame">
+      <video class="vfly__video" id="vFlyV" muted playsinline preload="none" disablepictureinpicture aria-label="Камера подлетает к вилле, входит в дом и разворачивается к виду из окон"></video>
+      <script>(function(){var C=['kvarc','berill','topaz','opal','agat'],c=new URLSearchParams(location.search).get('v');if(C.indexOf(c)<0)c='kvarc';var d=document.documentElement;d.setAttribute('data-v',c);if(c!=='kvarc')d.classList.add('v-wait');document.getElementById('vFlyV').poster='assets/video/prolet-'+c+'-poster'+(matchMedia('(max-width:760px)').matches?'-m':'')+'.webp';})();</script>
+      <div class="vfly__bar" aria-hidden="true"><i id="vFlyBar"></i></div>
+    </div>
+    <div class="wrap grid vfly__cap">
+      <div class="vfly__title">
+        <h1 class="d1" data-villa="name">Кварц</h1>
+        <p class="status" data-villa="status">в продаже</p>
+      </div>
+      <div class="vfly__txt">
+        <h2 class="tech vfly__h" id="prolet-h">Дом изнутри</h2>
+        <p class="lead vfly__line">Подлетаем, входим и&nbsp;разворачиваемся к&nbsp;окнам. Ради этого вида мы и&nbsp;строили.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Экран 2. Фото снаружи с точками на фасаде, строка характера, штамп и цепочка фактов (DIZAJN 3.4).
+     Строку, штамп, цепочку и точки подставляет pages/villa.js по ?v=. Фото ставит скрипт ниже
+     по коду, который уже записал скрипт пролёта. -->
 <section class="vhero" id="villa">
   <div class="vhero__ph" id="vPh">
-    <img class="vhero__img" id="vImg" alt="" fetchpriority="high" decoding="async">
-    <script>(function(){var C=['kvarc','berill','topaz','opal','agat'],c=new URLSearchParams(location.search).get('v');if(C.indexOf(c)<0)c='kvarc';var d=document.documentElement;d.setAttribute('data-v',c);if(c!=='kvarc')d.classList.add('v-wait');document.getElementById('vImg').src='assets/img/villy/'+c+'-ext'+(matchMedia('(max-width:760px)').matches?'-m':'')+'.webp';})();</script>
+    <img class="vhero__img" id="vImg" alt="" loading="lazy" decoding="async">
+    <script>document.getElementById('vImg').src='assets/img/villy/'+document.documentElement.getAttribute('data-v')+'-ext'+(matchMedia('(max-width:760px)').matches?'-m':'')+'.webp';</script>
     <noscript><img class="vhero__img" src="assets/img/villy/kvarc-ext.webp" alt=""></noscript>
     <div class="vhs" id="vHs"></div>
   </div>
   <div class="vhs-sheet" id="vHsSheet" hidden></div>
   <div class="plate wrap">
     <div class="grid plate__top">
-      <div class="plate__title villa__name">
-        <h1 class="d1" data-villa="name">Кварц</h1>
-        <p class="status" data-villa="status">в продаже</p>
-      </div>
       <p class="lead plate__lead" data-villa="line">Рассветная. Окна на&nbsp;восток, кухня встречает солнце первой.</p>
       <dl class="stamp">
         <div><dt>Лист</dt><dd data-villa="sheet">04.1 из 07</dd></div>
@@ -86,33 +105,13 @@
   </div>
 </section>
 
-<!-- Экран 2. Галерея и описание -->
+<!-- Экран 3. Галерея и описание -->
 <section class="sec wrap" id="galereya" aria-label="Фотографии виллы">
   <div class="gal" id="gal"></div>
   <p class="lead gal__about" data-villa="about">Мы поставили Кварц на&nbsp;восточный край мыса, и&nbsp;первое солнце достаётся ему. Оно встаёт над заливом и&nbsp;через гранёное стекло входит прямо в&nbsp;кухню. Спальня хозяев наверху смотрит туда же, на&nbsp;восход.</p>
 </section>
 
-<!-- Пролёт: камера с воды через стекло в дом и разворот к виду, видео перематывается прокруткой.
-     Скрыт, пока у виллы нет своего видео (prolet в villas.js). Включает и грузит pages/villa-prolet.js -->
-<section class="vfly" id="prolet" aria-labelledby="prolet-h" hidden>
-  <div class="vfly__pin">
-    <div class="vfly__frame">
-      <video class="vfly__video" id="vFlyV" muted playsinline preload="none" disablepictureinpicture aria-label="Камера подлетает к вилле, входит в дом и разворачивается к виду из окон"></video>
-      <div class="vfly__bar" aria-hidden="true"><i id="vFlyBar"></i></div>
-    </div>
-    <div class="wrap grid vfly__cap">
-      <h2 class="d2 vfly__h" id="prolet-h">Дом изнутри</h2>
-      <p class="lead vfly__line">Подлетаем, входим и&nbsp;разворачиваемся к&nbsp;окнам. Ради этого вида мы и&nbsp;строили.</p>
-      <dl class="stamp vfly__stamp">
-        <div><dt>Лист</dt><dd data-villa="fsheet">04.1, пролёт</dd></div>
-        <div><dt>Окна на</dt><dd data-villa="fview">восток, азимут 90°</dd></div>
-        <div><dt>Вид</dt><dd data-villa="fwater">залив</dd></div>
-      </dl>
-    </div>
-  </div>
-</section>
-
-<!-- Экран 3. План: лист чертежа (1–8) из plans.js, табы этажей, экспликация помещений (9–12, липко) -->
+<!-- Экран 4. План: лист чертежа (1–8) из plans.js, табы этажей, экспликация помещений (9–12, липко) -->
 <section class="sec wrap" id="plan" aria-labelledby="plan-h">
   <h2 class="vh" id="plan-h">Планы этажей</h2>
   <div class="grid vplan">
@@ -154,7 +153,7 @@
   </div>
 </section>
 
-<!-- Экран 4. Куда смотрят окна: генплан у виллы, веер, лучи солнца сегодня / июнь / декабрь -->
+<!-- Экран 5. Куда смотрят окна: генплан у виллы, веер, лучи солнца сегодня / июнь / декабрь -->
 <section class="sec wrap" id="okna" aria-labelledby="okna-h">
   <div class="grid vokna">
     <div class="vokna__map"><svg id="vMap" class="vokna__svg" aria-label="Вилла на генплане мыса, сектор обзора из окон и направления солнца"></svg>
@@ -174,18 +173,19 @@
   </div>
 </section>
 
-<!-- Экран 5. Соседние виллы: предыдущий и следующий лист по кругу -->
-<nav class="sec wrap" id="sosedi" aria-label="Соседние виллы">
-  <div class="vnb" id="vNb"></div>
-</nav>
-
 <!-- Экран 6. Позвать на показ -->
 <section class="sec wrap vbook" id="na-pokaz">
   <p class="lead vbook__line" id="vBookLine"></p>
   <a class="btn btn--solid" data-villa="book" href="pokaz.html?v=kvarc">Посмотреть эту виллу вживую</a>
 </section>
 
-<nav class="next wrap" aria-label="Следующий лист"><a href="villa.html?v=berill" data-villa="next"><span class="d2">Лист 04.2. Берилл</span></a></nav>
+<!-- Экран 7. Другие виллы: четыре плашки (фото снаружи, лист, имя, силуэт), клик ведёт на виллу -->
+<section class="sec wrap" id="drugie" aria-labelledby="drugie-h">
+  <h2 class="d2 vnb__h" id="drugie-h">Другие виллы</h2>
+  <div class="vnb" id="vNb"></div>
+</section>
+
+<nav class="next wrap" aria-label="Следующий лист"><a href="mesto.html" data-villa="next"><span class="d2">Лист 05. Место. Ситуационный план</span></a></nav>
 </main>
 
 <footer class="foot">

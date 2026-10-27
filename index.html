@@ -70,13 +70,35 @@
       <div><dt>вилл на мысе</dt><dd>5</dd></div>
       <div><dt>до потолка в гостиной</dt><dd>4,2<i>м</i></dd></div>
       <div><dt>фасада из стекла</dt><dd>72<i>%</i></dd></div>
-      <div><dt>от террасы до воды</dt><dd>30<i>м</i></dd></div>
+      <div><dt>между соседями</dt><dd>60<i>м</i></dd></div>
     </dl>
-    <dl class="stamp"><div><dt>Лист</dt><dd>01 из 07</dd></div><div><dt>Координаты</dt><dd>62°08′ с.&nbsp;ш. 34°01′ в.&nbsp;д.</dd></div><div><dt>Закат сегодня</dt><dd id="stampSet">&nbsp;</dd></div></dl>
+    <dl class="stamp"><div><dt>Координаты</dt><dd>62°08′ с.&nbsp;ш. 34°01′ в.&nbsp;д.</dd></div><div><dt>Закат сегодня</dt><dd id="stampSet">&nbsp;</dd></div></dl>
   </div>
 </section>
 
-<!-- Экран 2. Свет по часам: одна гостиная в трёх светах, час идёт по прокрутке (на телефоне шкалу тянут пальцем) -->
+<!-- Экран 2. Пять вилл подряд, каждая во весь экран: короткая петля подлёта (autoplay, не скраб), имя и
+     строка характера из villas.js, весь блок ведёт на лист виллы. Блоки строит pages/glavnaya.js -->
+<section class="loops" id="villy5" aria-label="Пять вилл"></section>
+
+<!-- Экран 3. Генплан в лёгком режиме и экспликация вилл -->
+<section class="sec wrap" id="genplan">
+  <div class="sec__head">
+    <h2 class="d2">У&nbsp;каждой виллы свой берег</h2>
+    <p class="txt">Выберите виллу на плане мыса. Покажем этажи, площади и&nbsp;куда смотрят окна.</p>
+  </div>
+  <div class="grid gpl">
+    <div class="gpl__map sheet"><svg id="gplSvg" aria-label="Генплан мыса Светлого"></svg></div>
+    <div class="gpl__tbl">
+      <table class="expl" id="expl">
+        <thead><tr><th scope="col">№</th><th scope="col">Вилла</th><th scope="col" class="r">м²</th><th scope="col" class="r">Спален</th><th scope="col">Окна на</th><th scope="col">Статус</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <a class="tick-link gpl__link" href="villy.html">Лист 03. Генплан</a>
+    </div>
+  </div>
+</section>
+
+<!-- Экран 4. «Пять граней одного мыса», свет по часам: одна гостиная в трёх светах, час идёт по прокрутке (на телефоне шкалу тянут пальцем) -->
 <section class="light" id="svet">
   <div class="light__pin">
     <div class="wrap grid light__grid">
@@ -106,41 +128,7 @@
   </div>
 </section>
 
-<!-- Пролёт: с воды внутрь виллы «Кварц», видео перематывается прокруткой -->
-<section class="fly" id="prolet">
-  <div class="fly__pin">
-    <div class="fly__frame">
-      <video class="fly__video" id="flyV" muted playsinline preload="none" disablepictureinpicture aria-label="Вилла «Кварц» на рассвете. Камера подлетает с воды и входит в кухню-столовую" data-src="assets/video/prolet-kvarc.mp4" data-src-m="assets/video/prolet-kvarc-m.mp4" data-poster="assets/video/prolet-kvarc-poster.webp" data-poster-m="assets/video/prolet-kvarc-poster-m.webp"></video>
-      <div class="fly__bar" aria-hidden="true"><i id="flyBar"></i></div>
-    </div>
-    <div class="wrap grid fly__cap">
-      <h2 class="d2 fly__name">Кварц</h2>
-      <p class="lead fly__line">Рассветная. Окна на&nbsp;восток, кухня встречает солнце первой.</p>
-      <a class="tick-link fly__link" href="villa.html?v=kvarc">Лист 04.1. Кварц</a>
-      <a class="tick-link fly__more" href="villy.html">Все пять вилл</a>
-    </div>
-  </div>
-</section>
-
-<!-- Экран 3. Генплан в лёгком режиме и экспликация вилл -->
-<section class="sec wrap" id="genplan">
-  <div class="sec__head">
-    <h2 class="d2">У&nbsp;каждой виллы свой берег</h2>
-    <p class="txt">Выберите виллу на плане мыса. Покажем этажи, площади и&nbsp;куда смотрят окна.</p>
-  </div>
-  <div class="grid gpl">
-    <div class="gpl__map sheet"><svg id="gplSvg" aria-label="Генплан мыса Светлого"></svg></div>
-    <div class="gpl__tbl">
-      <table class="expl" id="expl">
-        <thead><tr><th scope="col">№</th><th scope="col">Вилла</th><th scope="col" class="r">м²</th><th scope="col" class="r">Спален</th><th scope="col">Окна на</th><th scope="col">Статус</th></tr></thead>
-        <tbody></tbody>
-      </table>
-      <a class="tick-link gpl__link" href="villy.html">Лист 03. Генплан</a>
-    </div>
-  </div>
-</section>
-
-<!-- Экран 4. Вода с трёх сторон: видео тумана из v1 со сценой открытия -->
+<!-- Экран 5. Вода с трёх сторон: видео тумана из v1 со сценой открытия -->
 <section class="view" id="voda">
   <div class="view__stage">
     <div class="view__media" id="viewMedia">
@@ -156,7 +144,7 @@
   </div>
 </section>
 
-<!-- Экран 5. Ведомость листов крупно: строка и миниатюра ключевой картинки листа -->
+<!-- Экран 6. Ведомость листов крупно: строка и миниатюра ключевой картинки листа -->
 <section class="sec wrap" id="listy">
   <h2 class="d2 listy__h">Ведомость листов</h2>
   <ol class="ledger">

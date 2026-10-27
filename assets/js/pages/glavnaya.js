@@ -1,7 +1,8 @@
 // Лист 01, главная (index.html). Экран 1: кристалл gem.js (час из часов на мысе) и дуга солнца
-// на сегодня, раз в минуту. Экран 2: свет по часам, одна гостиная в трёх светах, час идёт по
-// прокрутке (на телефоне и при reduced-motion шкалу тянут). Пролёт в Кварц: видео перематывается
-// прокруткой. Экран 3: генплан в лёгком режиме и экспликация. Экран 4: туман v1. Экран 5: ведомость.
+// на сегодня, раз в минуту. Экран 2: пять вилл подряд, у каждой короткая петля подлёта (играет сама,
+// пока блок на экране) и ссылка на лист виллы. Экран 3: генплан в лёгком режиме и экспликация.
+// Экран 4: свет по часам, одна гостиная в трёх светах, час идёт по прокрутке (на телефоне и при
+// reduced-motion шкалу тянут). Экран 5: туман v1. Экран 6: ведомость.
 import { gsap, ScrollTrigger, reduced, phone, ready, $, $$ } from '../site.js';
 import { createGem } from '../gem.js';
 import { sunPos, sunTimes, capeHM, hm } from '../sun.js';
@@ -17,6 +18,46 @@ const svgEl = (parent, tag, a, txt) => {
   parent.appendChild(n); return n;
 };
 
+/* ---------- экран 2: пять вилл, петли подлёта ----------
+   Блоки строятся первыми, до триггеров: от их высоты зависят все закрепления ниже.
+   Загрузка: ничего до первой прокрутки (первый блок стоит сразу под героем), дальше постер за
+   полтора экрана, видео за полэкрана. Играет только блок на экране, ушедший ставится на паузу.
+   reduced-motion: только постер. Пока у виллы нет петли (petlya: false), стоит постер её пролёта. */
+const loopsEl = $('#villy5'), loops = [];
+if (loopsEl) {
+  VILLAS.forEach((v) => {
+    const a = document.createElement('a');
+    a.className = 'loop'; a.href = `villa.html?v=${v.code}`;
+    a.innerHTML = `<video class="loop__v" muted playsinline loop preload="none" disablepictureinpicture aria-hidden="true"></video>`
+      + `<span class="loop__cap wrap"><span class="tech loop__no">Лист ${v.sheet}</span><span class="d1 loop__name"></span>`
+      + `<span class="lead loop__line"></span><i class="loop__tick" aria-hidden="true"></i></span>`;
+    $('video', a).muted = true; // iOS играет сам только беззвучное
+    $('.loop__name', a).textContent = v.name;
+    $('.loop__line', a).textContent = v.line;
+    const m = phone ? '-m' : '', base = v.petlya ? `assets/video/petlya-${v.code}` : `assets/video/prolet-${v.code}`;
+    loops.push({ a, v: $('video', a), poster: `${base}-poster${m}.webp`, src: v.petlya && !reduced ? `${base}${m}.mp4` : null, on: false });
+    loopsEl.append(a);
+  });
+  const watch = (margin, fn, threshold = 0) => {
+    const io = new IntersectionObserver((es) => es.forEach((e) => fn(loops.find((l) => l.a === e.target), e)), { rootMargin: margin + ' 0px', threshold });
+    loops.forEach((l) => io.observe(l.a));
+  };
+  const start = () => {
+    watch('150%', (l, e) => { if (e.isIntersecting && !l.v.poster) l.v.poster = l.poster; });
+    watch('50%', (l, e) => {
+      if (!e.isIntersecting || !l.src || l.v.src) return;
+      l.v.src = l.src; l.v.preload = 'auto';
+      if (l.on) l.v.play().catch(() => {});
+    });
+    watch('0px', (l, e) => {
+      l.on = e.isIntersecting;
+      if (!l.v.src) return;
+      if (l.on) l.v.play().catch(() => {}); else l.v.pause();
+    }, 0.15);
+  };
+  if (scrollY > 0) start(); else addEventListener('scroll', start, { once: true, passive: true });
+}
+
 /* ---------- кристалл ---------- */
 const canvas = $('#gem');
 let gem = null;
@@ -27,7 +68,7 @@ if (!gem) { canvas.style.display = 'none'; document.documentElement.classList.ad
 // положение кристалла на первом экране и куда он уходит при прокрутке (доли половины кадра).
 // На телефоне кристалл над «ГРАНИ» (DIZAJN 5): под него оставлен верх первого экрана, см. glavnaya.css
 const POS = phone
-  ? { hero: { x: 0.14, y: 0.9, s: 0.32 }, away: { x: 0.5, y: 0.95, s: 0.26 } }
+  ? { hero: { x: 0.14, y: 0.6, s: 0.4 }, away: { x: 0.5, y: 0.95, s: 0.26 } }
   : { hero: { x: 0.5, y: 0.27, s: 0.86 }, away: { x: 0.3, y: 0.15, s: 0.6 } };
 const lerp = (a, b, t) => a + (b - a) * t;
 const st = { hero: 0, out: 0 };
@@ -45,8 +86,8 @@ function updateGem() {
 }
 ScrollTrigger.create({ trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true,
   onUpdate: (s) => { st.hero = s.progress; updateGem(); } });
-// на «свете по часам» кристалл уходит в прозрачность (DIZAJN 3.1, экран 2)
-ScrollTrigger.create({ trigger: '#svet', start: 'top bottom', end: phone ? 'top 60%' : 'top 35%', scrub: true,
+// на втором экране (пять вилл) кристалл уходит в прозрачность
+ScrollTrigger.create({ trigger: '#villy5', start: 'top bottom', end: phone ? 'top 60%' : 'top 35%', scrub: true,
   onUpdate: (s) => { st.out = s.progress; updateGem(); } });
 updateGem();
 if (gem) gem.start();
@@ -167,48 +208,6 @@ if (lScale) {
   drawLeads();
   addEventListener('resize', drawLeads);
   if (document.fonts) document.fonts.ready.then(drawLeads);
-}
-
-/* ---------- пролёт: видео на паузе, прокрутка задаёт цель, время догоняет её ---------- */
-const flyV = $('#flyV'), flyBar = $('#flyBar');
-if (flyV) {
-  const s = { progress: 0, cur: 0, dur: 0, live: false };
-  let loaded = false;
-  const load = () => {
-    if (loaded) return; loaded = true;
-    flyV.poster = phone ? flyV.dataset.posterM : flyV.dataset.poster;
-    flyV.src = phone ? flyV.dataset.srcM : flyV.dataset.src;
-    flyV.preload = 'auto';
-    flyV.load();
-  };
-  // грузим при подходе к секции, не на первом экране
-  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { load(); io.disconnect(); } }), { rootMargin: '60% 0px' });
-  io.observe($('#prolet'));
-  const meta = () => {
-    s.dur = flyV.duration || 0;
-    const p = flyV.play(); // будим декодер: iOS не рисует кадр до первого play
-    if (p && p.then) p.then(() => flyV.pause()).catch(() => {}); else flyV.pause();
-  };
-  flyV.addEventListener('loadedmetadata', meta, { once: true });
-  if (!reduced) {
-    ScrollTrigger.create({
-      trigger: '#prolet', start: 'top top', end: () => '+=' + Math.round(innerHeight * (phone ? 2.2 : 2.6)),
-      pin: '.fly__pin', pinSpacing: true, anticipatePin: 1,
-      onUpdate: (self) => { s.progress = self.progress; if (flyBar) flyBar.style.transform = `scaleX(${self.progress.toFixed(4)})`; },
-      onToggle: (self) => { s.live = self.isActive; if (self.isActive) load(); },
-    });
-    // догоняем цель плавно; новый seek только когда прошлый закончился
-    gsap.ticker.add(() => {
-      if (!s.dur || flyV.readyState < 1) return;
-      if (!flyV.paused) flyV.pause();
-      const target = s.progress * (s.dur - 0.04), d = target - s.cur;
-      if (Math.abs(d) < 0.001 && Math.abs(flyV.currentTime - target) < 0.002) return;
-      const k = 1 - Math.pow(1 - 0.12, gsap.ticker.deltaRatio(60));
-      s.cur = Math.abs(d) < 0.001 ? target : s.cur + d * k;
-      const gap = Math.abs(s.cur - flyV.currentTime);
-      if (!flyV.seeking && (gap > 1 / 48 || (s.cur === target && gap > 0.002))) flyV.currentTime = s.cur;
-    });
-  }
 }
 
 /* ---------- экран 3: генплан в лёгком режиме и экспликация ---------- */

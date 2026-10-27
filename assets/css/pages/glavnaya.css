@@ -1,6 +1,6 @@
 /* Лист 01, главная (index.html). Подключается после base.css (и villy-genplan.css для генплана).
-   Экраны: 1 первый экран с кристаллом и дугой солнца · 2 свет по часам · пролёт в Кварц ·
-   3 генплан и экспликация · 4 вода с трёх сторон · 5 ведомость листов. */
+   Экраны: 1 первый экран с кристаллом и дугой солнца · 2 пять вилл, петли подлёта ·
+   3 генплан и экспликация · 4 свет по часам · 5 вода с трёх сторон · 6 ведомость листов. */
 
 /* кристалл: холст на весь экран под страницей, положение задаёт pages/glavnaya.js */
 .gem{position:fixed;inset:0;width:100vw;height:100vh;height:100lvh;z-index:0;pointer-events:none;transition:opacity .6s}
@@ -52,22 +52,21 @@
 .light__hours li.is-on{opacity:1}
 .light__hours b{font:italic 500 13px/1 var(--ff-t);color:var(--bronze-ink)}
 
-/* ---------- пролёт ---------- */
-.fly{position:relative}
-.fly__pin{position:relative;height:100vh;height:100svh;display:flex;flex-direction:column;padding-top:var(--hdr);background:var(--bg)}
-.fly__frame{position:relative;flex:1;min-height:0;overflow:hidden;background:#C9CFCC}
-.fly__video{width:100%;height:100%;object-fit:cover;background:center/cover no-repeat}
-.fly__bar{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(251,250,247,.45)}
-.fly__bar i{position:absolute;inset:0;background:var(--bronze);transform:scaleX(0);transform-origin:left}
-.fly__cap{align-items:end;row-gap:12px;padding-top:22px;padding-bottom:26px}
-.fly__name{grid-column:1/4}
-.fly__line{grid-column:4/9;max-width:44ch}
-.fly__link{grid-column:9/13;justify-self:end}
-/* «Ещё четыре виллы» под ссылкой на Кварц: та же засечка, бронзой, чтобы читалось как действие */
-.fly__name,.fly__line{grid-row:1/3}
-.fly__link{grid-row:1;min-height:36px}
-.fly__more{grid-column:9/13;grid-row:2;justify-self:end;min-height:36px;color:var(--bronze-ink)}
-.fly__more:hover{color:var(--ink)}
+/* ---------- экран 2: пять вилл, у каждой петля подлёта во весь экран под шапкой ---------- */
+.loops{position:relative;z-index:1;background:var(--bg)}
+.loop{position:relative;display:flex;align-items:flex-end;height:calc(100vh - var(--hdr));height:calc(100svh - var(--hdr));min-height:440px;overflow:hidden;background:var(--sand);color:var(--surface)}
+.loop+.loop{border-top:1px solid var(--bg)}
+.loop__v{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease-out)}
+/* затемнение снизу под подпись: читается на любом кадре */
+.loop::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(20,22,24,.62) 0%,rgba(20,22,24,.28) 32%,rgba(20,22,24,0) 58%);pointer-events:none}
+.loop__cap{position:relative;z-index:1;display:grid;grid-template-columns:auto 1fr auto;align-items:end;column-gap:var(--gap);row-gap:10px;width:100%;padding-bottom:clamp(28px,6vh,64px)}
+.loop__no{grid-column:1/-1;color:rgba(251,250,247,.82)}
+.loop__name{grid-column:1/2;color:var(--surface)}
+.loop__line{grid-column:2/3;max-width:40ch;color:rgba(251,250,247,.92);padding:0 0 .6em clamp(12px,3vw,48px)}
+.loop__tick{grid-column:3/4;margin-bottom:.9em;width:46px;height:11px;background:linear-gradient(var(--surface),var(--surface)) left center/100% 1px no-repeat,linear-gradient(-45deg,transparent 44%,var(--surface) 44% 58%,transparent 58%) right center/11px 11px no-repeat;transition:transform .35s var(--ease-out)}
+.loop:hover .loop__v{transform:scale(1.025)}
+.loop:hover .loop__tick,.loop:focus-visible .loop__tick{transform:translateX(8px)}
+.loop:focus-visible{outline:2px solid var(--bronze);outline-offset:-6px}
 
 /* ---------- экран 3: генплан и экспликация ---------- */
 .gpl{align-items:start;row-gap:32px}
@@ -113,9 +112,12 @@
   .light__head,.light__stage{grid-column:1/-1}
   .light__stage{margin-top:32px}
   .gpl__map,.gpl__tbl{grid-column:1/-1}
-  .fly__name,.fly__line,.fly__link,.fly__more{grid-column:1/-1;grid-row:auto;justify-self:start}
 }
 @media (max-width:760px){
+  .loop__cap{grid-template-columns:1fr auto;row-gap:8px}
+  .loop__name{grid-column:1/2}
+  .loop__tick{grid-column:2/3}
+  .loop__line{grid-column:1/-1;grid-row:3;padding:0;font-size:1rem}
   /* верх экрана под кристалл, дальше текст сверху вниз, а не прижат к низу */
   .hero{justify-content:flex-start;padding-top:300px}
   .sunarc{margin-top:28px}
@@ -129,10 +131,6 @@
   .light__hours{grid-template-columns:1fr}
   .light__hours li{display:none;opacity:1}
   .light__hours li.is-on{display:grid}
-  .fly__cap{padding-top:16px;padding-bottom:20px;row-gap:8px}
-  .fly__name{font-size:1.8rem}
-  .fly__line{font-size:1rem}
-  .fly__link,.fly__more{min-height:44px}
   .gpl__map{padding:8px}
   .gpl__map svg{aspect-ratio:1/1}
   .expl th:nth-child(5),.expl td:nth-child(5),.expl th:nth-child(4),.expl td:nth-child(4){display:none}
@@ -145,3 +143,4 @@
   .ledger__name{grid-column:2;font-size:1.4rem}
   .ledger__line{grid-column:2;font-size:15px}
 }
+@media (prefers-reduced-motion:reduce){.loop__v,.loop__tick{transition:none}.loop:hover .loop__v{transform:none}}

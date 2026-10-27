@@ -1,36 +1,23 @@
-// Лист 04.x, раздел «Пролёт»: камера снаружи через окно внутрь и разворот к виду, видео
-// перематывается прокруткой (как пролёт на главной, glavnaya.js). Подключает pages/villa.js.
+// Лист 04.x, первый экран: название виллы и пролёт камеры (снаружи через окно внутрь, разворот к виду),
+// видео перематывается прокруткой. Подключает pages/villa.js.
 //
 // Файлы виллы: assets/video/prolet-<код>.mp4 (компьютер), prolet-<код>-m.mp4 (телефон, вертикальный),
-// prolet-<код>-poster.webp и prolet-<код>-poster-m.webp. Раздел показывается, только если у виллы
-// в villas.js стоит prolet: true; иначе он остаётся hidden и ничего не грузится.
-//
-// Загрузка: постер при подходе к разделу, видео ближе (или при входе в закрепление, если прокрутку
-// прыгнули). reduced-motion: без закрепления и скраба, постер и обычный плеер, видео грузится по «плей».
+// prolet-<код>-poster.webp и prolet-<код>-poster-m.webp. Постер ставит скрипт в разметке до первой
+// отрисовки, видео грузится сразу, как выполнился модуль: это первый экран.
+// Если у виллы нет пролёта (prolet: false в villas.js), кадр прячется, остаются имя и строка.
+// reduced-motion: без закрепления и скраба, постер и обычный плеер, видео грузится по «плей».
 import { gsap, ScrollTrigger, reduced, phone, $ } from '../site.js';
 
 export function initProlet(v) {
   const sec = $('#prolet'), video = $('#vFlyV'), bar = $('#vFlyBar');
-  if (!sec || !video || !v.prolet) return;
-  const base = `assets/video/prolet-${v.code}`, m = phone ? '-m' : '';
-  sec.hidden = false;
-
-  let posterSet = false, loaded = false;
-  const setPoster = () => { if (!posterSet) { posterSet = true; video.poster = `${base}-poster${m}.webp`; } };
-  const load = () => {
-    if (loaded) return; loaded = true;
-    setPoster();
-    video.src = `${base}${m}.mp4`;
-    if (!reduced) { video.preload = 'auto'; video.load(); } // при reduced-motion видео пойдёт по «плей»
-  };
-  const near = (margin, fn) => {
-    const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { io.disconnect(); fn(); } }, { rootMargin: margin + ' 0px' });
-    io.observe(sec);
-  };
-  near('100%', setPoster);
-  near('50%', load);
-
-  if (reduced) { video.controls = true; return; }
+  if (!sec || !video) return;
+  if (!v.prolet) { sec.classList.add('vfly--none'); video.removeAttribute('poster'); return; }
+  const m = phone ? '-m' : '', base = `assets/video/prolet-${v.code}`;
+  if (!video.poster) video.poster = `${base}-poster${m}.webp`;
+  video.src = `${base}${m}.mp4`;
+  if (reduced) { video.controls = true; return; } // preload="none": до «плей» качается только постер
+  video.preload = 'auto';
+  video.load();
 
   const s = { progress: 0, cur: 0, dur: 0 };
   video.addEventListener('loadedmetadata', () => {
@@ -41,9 +28,8 @@ export function initProlet(v) {
 
   ScrollTrigger.create({
     trigger: sec, start: 'top top', end: () => '+=' + Math.round(innerHeight * (phone ? 2.2 : 2.6)),
-    pin: '.vfly__pin', pinSpacing: true, anticipatePin: 1,
+    pin: '.vfly__pin', pinSpacing: true,
     onUpdate: (self) => { s.progress = self.progress; if (bar) bar.style.transform = `scaleX(${self.progress.toFixed(4)})`; },
-    onToggle: (self) => { if (self.isActive) load(); },
   });
   // прокрутка задаёт цель, время видео плавно её догоняет; новый seek только когда прошлый закончился
   gsap.ticker.add(() => {
@@ -56,6 +42,6 @@ export function initProlet(v) {
     const gap = Math.abs(s.cur - video.currentTime);
     if (!video.seeking && (gap > 1 / 48 || (s.cur === target && gap > 0.002))) video.currentTime = s.cur;
   });
-  // галерея выше раздела строится после этого вызова (villa.js), поэтому пересчёт на следующем кадре
+  // галерея и план ниже строятся после этого вызова (villa.js), поэтому пересчёт на следующем кадре
   requestAnimationFrame(() => ScrollTrigger.refresh());
 }

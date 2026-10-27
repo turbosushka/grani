@@ -1,7 +1,7 @@
 // Листы 04.1–04.5, страница виллы (villa.html?v=код). Пустой или неверный код → Кварц.
-// Экраны: 1 фото с точками на фасаде и табличка · 2 галерея с лайтбоксом и описание ·
-// пролёт камеры, если у виллы есть видео (villa-prolet.js) · 3 план (villa-plan.js) ·
-// 4 «Куда смотрят окна» (генплан у виллы, villy-genplan.js) · 5 соседние виллы · 6 позвать на показ.
+// Экраны: 1 имя и пролёт камеры (villa-prolet.js) · 2 фото с точками на фасаде, строка, штамп, цепочка ·
+// 3 галерея с лайтбоксом и описание · 4 план (villa-plan.js) · 5 «Куда смотрят окна» (генплан у виллы,
+// villy-genplan.js) · 6 позвать на показ · 7 другие виллы, четыре плашки.
 // Все цифры из данных: villas.js, plans.js (площади, номера помещений), sun.js (восход и закат).
 import { gsap, reduced, lenis, scrollToEl, $, $$ } from '../site.js';
 import { VILLAS, villaByCode, azMain, sunSide, bedsWord, levelsWord, statusWord, imgSrc, imgSet } from '../villas.js';
@@ -28,7 +28,7 @@ const tomorrow = sunTimes(new Date(+capeDay(now) + DAY + 12 * 3600000));
 const side = sunSide(v); // 'rise' у вилл с окнами на восточную половину неба, 'set' у западных
 const az = Math.round(azMain(v));
 
-/* ---------- экран 1: подписи ---------- */
+/* ---------- экраны 1 и 2: подписи ---------- */
 document.title = `Вилла «${v.name}» · ГРАНИ`;
 set('name', v.name);
 set('line', v.line);
@@ -39,9 +39,6 @@ set('sunv', hm(side === 'rise' ? tomorrow.rise : tomorrow.set));
 set('about', v.about);
 set('okna', v.okna);
 set('pname', v.name);
-set('fsheet', `${v.sheet}, пролёт`);
-set('fview', `${v.view}, азимут ${az}°`);
-set('fwater', v.water);
 const status = $('[data-villa="status"]');
 status.textContent = statusWord(v);
 status.classList.toggle('status--res', v.res);
@@ -68,11 +65,11 @@ $('[data-villa="chain"]').replaceChildren(...cells.map(([n, unit, label, word]) 
 
 const book = $('[data-villa="book"]');
 if (book) book.href = `pokaz.html?v=${v.code}`;
-const nx = VILLAS[idx + 1];
+// следующий лист всегда 05: соседние виллы уже стоят плашками в «Других виллах» прямо над ним
 const next = $('[data-villa="next"]');
 if (next) {
-  next.href = nx ? `villa.html?v=${nx.code}` : 'mesto.html';
-  next.querySelector('.d2').textContent = nx ? `Лист ${nx.sheet}. ${nx.name}` : 'Лист 05. Место. Ситуационный план';
+  next.href = 'mesto.html';
+  next.querySelector('.d2').textContent = 'Лист 05. Место. Ситуационный план';
 }
 $$('a[href^="villa.html?v="]').forEach((a) => {
   if (a.closest('.vnb')) return;
@@ -81,19 +78,22 @@ $$('a[href^="villa.html?v="]').forEach((a) => {
 });
 html.classList.remove('v-wait');
 
-/* ---------- пролёт: до плана, чтобы закрепление уже раздвинуло страницу, когда точки ведут к плану ---------- */
+/* ---------- экран 1: пролёт; до плана, чтобы закрепление уже раздвинуло страницу, когда точки ведут к плану ---------- */
 initProlet(v);
 
-/* ---------- экран 3: план (раньше точек: точки ведут к нему) ---------- */
+/* ---------- экран 4: план (раньше точек: точки ведут к нему) ---------- */
 const plan = initPlan(v);
 function goToRoom(no) {
   const fl = Number(no.split('.')[0]) - 1;
   plan.show(fl, no, { flash: true });
+  // Lenis помнит высоту страницы с первого замера; закрепление пролёта её потом удлиняет, и без
+  // пересчёта прокрутка упиралась в старый низ (адрес #pom-… останавливался на середине страницы)
+  if (lenis) lenis.resize();
   scrollToEl($('#plan .vplan'), { duration: 1.1 });
   history.replaceState(null, '', `#pom-${no.replace('.', '-')}`);
 }
 
-/* ---------- экран 1: точки на фасаде ---------- */
+/* ---------- экран 2: точки на фасаде ---------- */
 const ph = $('#vPh'), img = $('#vImg'), layer = $('#vHs'), sheet = $('#vHsSheet');
 const spots = narrow.matches ? v.hotspots.slice(0, 3) : v.hotspots;
 let open = null, co = null, coLn = null;
@@ -193,11 +193,11 @@ if (typeof ResizeObserver !== 'undefined') new ResizeObserver(place).observe(ph)
 setTimeout(() => layer.classList.add('is-in'), reduced ? 0 : 600);
 // вход: имя из маски, засечки цепочки по очереди
 if (!reduced) {
-  gsap.from('#villa .d1', { yPercent: 40, opacity: 0, duration: 0.7, ease: 'power3.out', clearProps: 'all' });
+  gsap.from('#prolet .d1', { yPercent: 40, opacity: 0, duration: 0.7, ease: 'power3.out', clearProps: 'all' });
   gsap.from('#villa .chain > div', { opacity: 0, duration: 0.4, stagger: 0.08, delay: 0.2, clearProps: 'opacity' });
 }
 
-/* ---------- экран 2: галерея и лайтбокс ---------- */
+/* ---------- экран 3: галерея и лайтбокс ---------- */
 const gal = $('#gal');
 const shots = v.gallery;
 shots.forEach((g, i) => {
@@ -288,7 +288,7 @@ function closeLb() {
   (btns[lbI] || lbFrom && lbFrom.parentElement || btns[0]).focus({ preventScroll: true });
 }
 
-/* ---------- экран 4: куда смотрят окна ---------- */
+/* ---------- экран 5: куда смотрят окна ---------- */
 const map = drawGenplan($('#vMap'), {
   mode: 'villa', sel: v.code,
   onFit: (api) => { $('#vMapScale').style.width = (100 * api.pxPerM).toFixed(1) + 'px'; },
@@ -315,7 +315,7 @@ $('#vOknaT').innerHTML = [
   ['самый длинный день', dur(longest.len)],
 ].map(([k, val]) => `<div><dt>${k}</dt><dd>${val}</dd></div>`).join('');
 
-/* ---------- экран 5: соседи по кругу ---------- */
+/* ---------- экран 7: другие виллы, четыре плашки в порядке листов ---------- */
 const nb = $('#vNb');
 const sil = (code) => {
   const s = document.createElementNS(NS, 'svg'), polys = silhouette(code);
@@ -326,7 +326,7 @@ const sil = (code) => {
   for (const P of polys) { const p = document.createElementNS(NS, 'polygon'); p.setAttribute('points', P.map((q) => q.join(',')).join(' ')); s.append(p); }
   return s;
 };
-[VILLAS[(idx + VILLAS.length - 1) % VILLAS.length], VILLAS[(idx + 1) % VILLAS.length]].forEach((n) => {
+VILLAS.filter((n) => n.code !== v.code).forEach((n) => {
   const a = document.createElement('a');
   a.className = 'vnb__a'; a.href = `villa.html?v=${n.code}`;
   a.innerHTML = `<span class="vnb__ph"><img src="${imgSrc(n.code + '-ext', true)}" alt="" loading="lazy" decoding="async"></span>`
