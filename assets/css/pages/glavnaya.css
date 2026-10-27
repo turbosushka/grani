@@ -12,8 +12,10 @@
 .hero__lead{margin-top:clamp(20px,3vw,32px)}
 .hero__cta{margin-top:clamp(12px,2vw,24px)}
 .hero__foot{margin-top:clamp(28px,5vh,56px);padding-bottom:clamp(28px,5vh,48px);align-items:end;row-gap:32px}
-.hero__chain{grid-column:1/10}
-.hero__foot .stamp{grid-column:10/13}
+.hero__chain{grid-column:1/9}
+.hero__foot .stamp{grid-column:9/13}
+.hero__foot .stamp dd{white-space:nowrap} /* координаты в одну строку (Саша, 27.10) */
+@media (max-width:420px){.hero__foot .stamp dd{font-size:12px}}
 /* дуга солнца под кристаллом */
 .sunarc{grid-column:8/13;align-self:end}
 .sunarc__svg{width:100%;height:auto;overflow:visible}

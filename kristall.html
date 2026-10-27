@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ГРАНИ · кристалл</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F4F2ED">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F4F2ED'/%3E%3Cpath d='M16 4 27 12 23 27H9L5 12z' fill='none' stroke='%239C7C4D' stroke-width='1.6'/%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/forum-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/ysabeau-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/pages/kristall.css">
+<script type="importmap">{"imports":{"three":"./assets/js/three.module.min.js"}}</script>
+</head>
+<body class="kr">
+<!-- Служебная страница: конструктор кристалла с первого экрана. С сайта не ссылается. -->
+<canvas id="gem" class="kr__gem" aria-label="Кристалл. Можно вращать мышью или пальцем"></canvas>
+<header class="kr__top">
+  <a class="kr__logo" href="index.html">ГРАНИ</a>
+  <span class="kr__title">кристалл</span>
+</header>
+<p class="kr__nogl" id="nogl" hidden>Браузер не показывает 3D. Откройте страницу в Chrome или Safari.</p>
+
+<aside class="kr__panel" id="panel" data-open="true" aria-label="Настройки кристалла">
+  <button class="kr__handle" id="handle" type="button" aria-expanded="true" aria-controls="panelBody">
+    <span>Настройки</span><i aria-hidden="true"></i>
+  </button>
+  <div class="kr__body" id="panelBody">
+    <div class="kr__group">
+      <p class="kr__label">Свет</p>
+      <div class="kr__seg" id="hour">
+        <button type="button" data-v="1" aria-pressed="true">День</button>
+        <button type="button" data-v="2" aria-pressed="false">Вечер</button>
+      </div>
+    </div>
+    <div class="kr__group">
+      <p class="kr__label">Готовые</p>
+      <div class="kr__presets" id="presets">
+        <button type="button" data-p="r4">Круг 4</button>
+        <button type="button" data-p="a">A</button>
+        <button type="button" data-p="b">B</button>
+        <button type="button" data-p="mid">Середина</button>
+      </div>
+    </div>
+    <div class="kr__group">
+      <p class="kr__label">Огранка</p>
+      <div class="kr__seg" id="cut">
+        <button type="button" data-v="0" aria-pressed="false">Бриллиант</button>
+        <button type="button" data-v="1" aria-pressed="true">Ступени</button>
+      </div>
+    </div>
+    <div class="kr__sliders" id="sliders"></div>
+    <div class="kr__copy">
+      <button class="btn btn--line" id="copy" type="button">Скопировать настройки</button>
+      <p class="kr__done" id="done" aria-live="polite"></p>
+      <input class="kr__out" id="out" type="text" readonly aria-label="Строка настроек" hidden>
+    </div>
+  </div>
+</aside>
+
+<script type="module" src="assets/js/pages/kristall.js"></script>
+</body>
+</html>

@@ -1,26 +1,52 @@
-// ГРАНИ: вытянутый гранёный камень, площадка сверху, длинный острый павильон. three r160, свой шейдер.
-// Три варианта материала и формы, выбираются адресом страницы: ?gem=a|b|c (по умолчанию DEFAULT).
-//   a  горный хрусталь: шесть граней, прозрачный, почти без цвета
-//   b  дымчатое стекло: восемь граней, лёгкое серо-зелёное поглощение в толще (цвет --glass сайта)
-//   c  матовые грани и полированная площадка: восьмигранная колонна с острым низом
-// Свет: отражение и преломление по Френелю, 2–3 отражения внутри (огранка выпуклая, путь луча
-// считается точно, перебором плоскостей граней). Окружение размыто по шероховатости (PMREM),
-// поэтому блики мягкие, как в музейной витрине. Дисперсии и искр нет намеренно (слово Саши, 27.10).
+// ГРАНИ: гранёный кристалл с настраиваемой формой и материалом. three r160, свой шейдер.
+// Свет считается честно: отражение и преломление по Френелю, отражения внутри камня (огранка
+// выпуклая, путь луча находится перебором плоскостей граней), окружение размыто по шероховатости
+// (PMREM). Параметры (все, кроме огранки и числа граней, от 0 до 1, если не сказано иначе):
+//   cut    огранка: 0 бриллиантовая (звёзды, клинья), 1 ступенчатая (ровные грани между кольцами)
+//   n      граней по кругу, 5–12
+//   hw     высота к ширине, 0,5–2,2
+//   crown  доля высоты под коронкой, pav — под павильоном; остаток уходит в пояс
+//   frost  матовость боковых граней (площадка всегда полированная)
+//   tone   оттенок: 0 серый, 1 зелёный (цвет --glass сайта); sat — насыщенность, 0 бесцветный
+//   gloss  блеск: 0 спокойное стекло, 1 бриллиант круга 4 (алмазное преломление, дисперсия, искры)
+//   speed  скорость вращения
+// Источник параметров: createGem(canvas, { params }), иначе адрес ?k=… или ?gem=a|b|c, иначе пресет b.
 import * as THREE from 'three';
 import { ConvexGeometry } from './ConvexGeometry.js';
 
-const DEFAULT = 'b';
-const VARIANTS = {
-  // ior — показатель преломления, abs — поглощение r, g, b на единицу длины, rough — полировка
-  // граней (0 зеркало), frost — шероховатость матовых граней (0 — матовых нет), h/w — высота к ширине
-  a: { ior: 1.544, abs: [0.05, 0.03, 0.018], rough: 0.03, frost: 0, bounces: 3,
-       shape: { n: 6, table: 0.58, crown: 0.4, band: 0.55, pav: 2.8, brk: 0.4, brkR: 0.64 } },
-  b: { ior: 1.52, abs: [0.4, 0.26, 0.26], rough: 0.05, frost: 0, bounces: 3,
-       shape: { n: 8, table: 0.6, crown: 0.36, band: 0.5, pav: 2.9, brk: 0.35, brkR: 0.7 } },
-  c: { ior: 1.52, abs: [0.08, 0.05, 0.03], rough: 0.03, frost: 0.45, bounces: 2,
-       shape: { n: 8, table: 0.62, crown: 0.32, band: 1.4, pav: 1.9, brk: 0, brkR: 0 } },
+export const KEYS = ['cut', 'n', 'hw', 'crown', 'pav', 'frost', 'tone', 'sat', 'gloss', 'speed'];
+export const PRESETS = {
+  r4: { cut: 0, n: 8, hw: 0.61, crown: 0.25, pav: 0.7, frost: 0, tone: 0, sat: 0, gloss: 1, speed: 0.33 },
+  a: { cut: 1, n: 6, hw: 1.88, crown: 0.11, pav: 0.75, frost: 0, tone: 0, sat: 0, gloss: 0, speed: 0.22 },
+  b: { cut: 1, n: 8, hw: 1.88, crown: 0.1, pav: 0.77, frost: 0, tone: 1, sat: 0.5, gloss: 0, speed: 0.22 },
+  c: { cut: 1, n: 8, hw: 1.7, crown: 0.09, pav: 0.56, frost: 0.9, tone: 0, sat: 0.05, gloss: 0, speed: 0.22 },
+  mid: { cut: 1, n: 7, hw: 1.25, crown: 0.1, pav: 0.76, frost: 0, tone: 0.5, sat: 0.25, gloss: 0, speed: 0.22 },
 };
-const HEIGHT = 2.3; // высота камня в единицах сцены, одинаковая у всех вариантов: POS на главной общий
+const RANGE = { cut: [0, 1], n: [5, 12], hw: [0.5, 2.2], crown: [0.04, 0.4], pav: [0.3, 0.9] };
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+export function cleanParams(p) {
+  const o = {};
+  for (const k of KEYS) {
+    const [a, b] = RANGE[k] || [0, 1];
+    o[k] = clamp(Number.isFinite(+p[k]) ? +p[k] : PRESETS.b[k], a, b);
+  }
+  o.cut = Math.round(o.cut); o.n = Math.round(o.n);
+  return o;
+}
+export const toK = (p) => KEYS.map((k) => (k === 'cut' || k === 'n') ? String(p[k]) : String(+(+p[k]).toFixed(2))).join(',');
+export function fromK(s) {
+  const v = String(s || '').split(',');
+  if (v.length !== KEYS.length || v.some((x) => x === '' || !Number.isFinite(+x))) return null;
+  const p = {}; KEYS.forEach((k, i) => { p[k] = +v[i]; });
+  return cleanParams(p);
+}
+function paramsFromUrl() {
+  const q = new URLSearchParams(location.search);
+  return fromK(q.get('k')) || PRESETS[q.get('gem')] || null;
+}
+
+const MAXP = 112;   // плоскостей граней не больше: бриллиант на 12 граней по кругу даёт 109
+const HEIGHT = 2.3; // больший из размеров камня в единицах сцены
 
 const HOURS = [ // утро, день, вечер: фон страницы, цвет и место главного окна в отражениях
   { bg: new THREE.Color('#EEF1EE'), key: new THREE.Color('#DCEBF0'), kx: -6, ky: 3, sky: new THREE.Color('#E8F0F0') },
@@ -28,15 +54,29 @@ const HOURS = [ // утро, день, вечер: фон страницы, цв
   { bg: new THREE.Color('#F3E7D8'), key: new THREE.Color('#F2C38C'), kx: 7, ky: 1.5, sky: new THREE.Color('#F6E2CB') },
 ];
 
-// Кольца вершин сверху вниз: площадка, верх и низ пояса, излом павильона (если есть), остриё.
-// Кольца выровнены по углу, поэтому грани между ними — плоские трапеции, без мелкой огранки.
-function stonePoints({ n, table, crown, band, pav, brk, brkR }) {
-  const pts = [], ring = (r, y) => { for (let i = 0; i < n; i++) { const a = (i + 0.5) / n * Math.PI * 2; pts.push(new THREE.Vector3(r * Math.cos(a), y, r * Math.sin(a))); } };
-  ring(table, band / 2 + crown);
-  ring(1, band / 2);
-  ring(1, -band / 2);
-  if (brk > 0) ring(brkR, -band / 2 - brk * pav);
-  pts.push(new THREE.Vector3(0, -band / 2 - pav, 0));
+// Вершины камня, радиус пояса 1. Бриллиантовая: площадка, звёзды, клинья коронки, верхние и нижние
+// клинья у пояса, главные грани павильона, калетта; высоты подобраны так, чтобы четырёхугольные
+// грани были плоскими. Ступенчатая: кольца площадки, пояса и излома павильона, остриё.
+function stonePoints(p) {
+  const H = p.hw * 2;
+  let cr = p.crown, pv = p.pav; const s = cr + pv;
+  if (s > 0.97) { cr *= 0.97 / s; pv *= 0.97 / s; }
+  const crownH = cr * H, pavH = pv * H, gz = (H - crownH - pavH) / 2, n = p.n, pts = [];
+  const V = (r, a, y) => pts.push(new THREE.Vector3(r * Math.cos(a), y, r * Math.sin(a)));
+  const step = Math.PI * 2 / n;
+  if (p.cut === 0) {
+    const table = 0.56, star = 0.52, lower = 0.78, cs = Math.cos(Math.PI / n), tc = crownH / (1 - table);
+    for (let i = 0; i < n; i++) V(table, i * step, gz + crownH);
+    const rm = table + star * (1 - table);
+    for (let i = 0; i < n; i++) V(rm / cs, i * step + step / 2, gz + (1 - rm) * tc);
+    for (let j = 0; j < 2 * n; j++) { V(1, j * step / 2, gz); V(1, j * step / 2, -gz); }
+    const rq = 1 - lower;
+    for (let i = 0; i < n; i++) V(rq / cs, i * step + step / 2, -gz - (1 - rq) * pavH);
+  } else {
+    const ring = (r, y) => { for (let i = 0; i < n; i++) V(r, (i + 0.5) * step, y); };
+    ring(0.6, gz + crownH); ring(1, gz); ring(1, -gz); ring(0.68, -gz - 0.38 * pavH);
+  }
+  pts.push(new THREE.Vector3(0, -gz - pavH, 0));
   return pts;
 }
 
@@ -50,14 +90,14 @@ void main() {
 
 const FRAG = /* glsl */`
 #include <cube_uv_reflection_fragment>
-uniform vec4 uPlanes[NP];
+uniform vec4 uPlanes[${MAXP}];
+uniform int uNP;      // сколько плоскостей занято
+uniform int uB;       // сколько отражений внутри считать
 uniform sampler2D uEnv;
-uniform vec3 uCam;   // камера в координатах камня
-uniform mat3 uRot;   // поворот камня в мир, для выборки окружения
-uniform float uIor;
-uniform vec3 uAbs;
-uniform float uRough;
-uniform float uFrost;
+uniform vec3 uCam;    // камера в координатах камня
+uniform mat3 uRot;    // поворот камня в мир, для выборки окружения
+uniform float uIor, uDisp, uRough, uFrost, uMilk, uLeft;
+uniform vec3 uAbs;    // поглощение r, g, b на единицу длины
 varying vec3 vPos;
 varying vec3 vN;
 
@@ -75,16 +115,19 @@ float fres(float ci, float n1, float n2) {
 void main() {
   vec3 n = normalize(vN);
   vec3 v = normalize(vPos - uCam);
-  // матовая грань рассеивает: всё, что прошло через неё, дальше видно размыто
-  float r = (uFrost > 0.0 && n.y < 0.999) ? uFrost : uRough;
+  bool matte = uFrost > 0.0 && n.y < 0.999; // площадка всегда полированная
+  float r = matte ? max(uRough, uFrost) : uRough;
   float F = fres(clamp(-dot(v, n), 0.0, 1.0), 1.0, uIor);
   vec3 col = F * env(reflect(v, n), r);
   vec3 d = refract(v, n, 1.0 / uIor);
   vec3 p = vPos;
   vec3 w = vec3(1.0 - F);
-  for (int b = 0; b < BOUNCES; b++) {
+  vec3 ic = vec3(uIor - 0.011 * uDisp, uIor, uIor + 0.033 * uDisp);
+  for (int b = 0; b < 6; b++) {
+    if (b >= uB) break;
     float tmin = 1e4; vec3 nk = vec3(0.0, 1.0, 0.0);
-    for (int i = 0; i < NP; i++) {
+    for (int i = 0; i < ${MAXP}; i++) {
+      if (i >= uNP) break;
       vec4 pl = uPlanes[i];
       float dn = dot(d, pl.xyz);
       if (dn > 1e-5) { float t = (pl.w - dot(p, pl.xyz)) / dn; if (t < tmin) { tmin = t; nk = pl.xyz; } }
@@ -93,28 +136,64 @@ void main() {
     w *= exp(-uAbs * tmin);
     if (uFrost > 0.0 && nk.y < 0.999) r = max(r, uFrost);
     float c = dot(d, nk);
-    float Fi = fres(c, uIor, 1.0);
-    if (Fi < 1.0) col += w * (1.0 - Fi) * env(refract(d, -nk, uIor), r);
-    w *= Fi;
+    if (uDisp > 0.001) { // каналы выходят каждый со своим показателем: огонь
+      vec3 Fc = vec3(fres(c, ic.r, 1.0), fres(c, ic.g, 1.0), fres(c, ic.b, 1.0));
+      if (Fc.r < 1.0) col.r += w.r * (1.0 - Fc.r) * env(refract(d, -nk, ic.r), r).r;
+      if (Fc.g < 1.0) col.g += w.g * (1.0 - Fc.g) * env(refract(d, -nk, ic.g), r).g;
+      if (Fc.b < 1.0) col.b += w.b * (1.0 - Fc.b) * env(refract(d, -nk, ic.b), r).b;
+      w *= Fc;
+    } else {
+      float Fi = fres(c, uIor, 1.0);
+      if (Fi < 1.0) col += w * (1.0 - Fi) * env(refract(d, -nk, uIor), r);
+      w *= Fi;
+    }
     d = reflect(d, -nk);
   }
-  col += w * env(d, max(r, 0.35)); // остаток света после последнего отражения, мягко
-  // матовая грань светится рассеянным светом, как пескоструйное стекло
-  if (uFrost > 0.0 && n.y < 0.999) col = mix(col, env(n, 1.0) * 1.15, 0.4);
+  col += w * env(d, max(r, uLeft)); // остаток света после последнего отражения
+  if (matte) col = mix(col, env(n, 1.0) * 1.15, uMilk); // матовая грань светится рассеянным светом
   gl_FragColor = vec4(col, 1.0);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }`;
 
-export function createGem(canvas, { reduced = false, mobile = false } = {}) {
+// искры на вершинах коронки: вспыхивают, когда отражение у вершины смотрит в окно
+const SPARK_VERT = /* glsl */`
+attribute vec3 aN;
+uniform vec3 uL[3];
+uniform float uSize, uOn;
+varying float vI;
+void main() {
+  vec3 wp = (modelMatrix * vec4(position, 1.0)).xyz;
+  vec3 wn = normalize(mat3(modelMatrix) * aN);
+  vec3 r = reflect(normalize(wp - cameraPosition), wn);
+  float s = 0.0;
+  for (int k = 0; k < 3; k++) s += pow(max(dot(r, uL[k]), 0.0), 160.0);
+  vI = min(s, 1.4) * uOn;
+  vec4 mv = viewMatrix * vec4(wp + normalize(cameraPosition - wp) * 0.04, 1.0);
+  gl_Position = projectionMatrix * mv;
+  gl_PointSize = vI < 0.02 ? 0.0 : uSize * (0.35 + 0.65 * min(vI, 1.0)) / -mv.z;
+}`;
+const SPARK_FRAG = /* glsl */`
+uniform vec3 uCol;
+varying float vI;
+void main() {
+  vec2 c = gl_PointCoord * 2.0 - 1.0;
+  float r = length(c);
+  vec2 q = vec2(c.x + c.y, c.x - c.y) * 0.7071;
+  float rays = exp(-abs(c.x) * 34.0) * exp(-abs(c.y) * 2.6) + exp(-abs(c.y) * 34.0) * exp(-abs(c.x) * 4.0)
+             + 0.35 * (exp(-abs(q.x) * 40.0) + exp(-abs(q.y) * 40.0)) * exp(-r * 6.0);
+  float a = (exp(-r * r * 30.0) + rays) * vI * smoothstep(1.0, 0.7, r);
+  gl_FragColor = vec4(uCol * a, 1.0);
+}`;
+
+export function createGem(canvas, { reduced = false, mobile = false, params = null } = {}) {
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
   } catch (e) { return null; }
   if (!renderer.getContext()) return null;
 
-  const key = new URLSearchParams(location.search).get('gem');
-  const V = VARIANTS[key] || VARIANTS[DEFAULT];
+  let P = cleanParams(params || paramsFromUrl() || PRESETS.b);
 
   const dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.25 : 1.75);
   renderer.setPixelRatio(dpr);
@@ -126,41 +205,44 @@ export function createGem(canvas, { reduced = false, mobile = false } = {}) {
   const bg = HOURS[1].bg.clone();
   scene.background = bg;
 
-  // окружение в духе музейной витрины: светлый свод, мягкий верхний свет, большой боковой софтбокс,
-  // узкие контровые полосы для рёбер, серые простенки и бронзовый отсвет снизу. Перерисовывается
-  // только при смене часа.
+  // Окружение, которое камень отражает и преломляет. Два набора света, смешиваются блеском:
+  // «витрина» (светлый свод, верхний свет, софтбокс, узкие серые карточки для рёбер) и «ювелирный»
+  // (кольцо ярких окон с тёмными простенками, как в круге 4). Перерисовывается при смене часа и блеска.
   const envScene = new THREE.Scene();
   const sky = new THREE.SphereGeometry(20, 48, 32);
-  const c = new THREE.Color(), c1c = new THREE.Color();
-  const cols = [], pos = sky.attributes.position;
-  const stops = [[1, '#F7F7F3'], [0.4, '#DCE1DE'], [0.1, '#B7C2BF'], [0.0, '#93A09E'], [-0.2, '#848D8A'], [-0.6, '#A39D91'], [-1, '#C9C1B2']];
-  for (let i = 0; i < pos.count; i++) {
-    const y = pos.getY(i) / 20;
+  const SKY_CALM = [[1, '#F7F7F3'], [0.4, '#DCE1DE'], [0.1, '#B7C2BF'], [0.0, '#93A09E'], [-0.2, '#848D8A'], [-0.6, '#A39D91'], [-1, '#C9C1B2']];
+  const SKY_JEWEL = [[1, '#ECEDEA'], [0.45, '#C9D0CD'], [0.12, '#93A4A1'], [0.0, '#1C2B2C'], [-0.15, '#2E403F'], [-0.5, '#7D8985'], [-1, '#B9B1A2']];
+  const grad = (stops, y, out) => {
     let j = 0; while (j < stops.length - 2 && y < stops[j + 1][0]) j++;
     const [y0, s0] = stops[j], [y1, s1] = stops[j + 1];
-    c.set(s0).lerp(c1c.set(s1), (y0 - y) / (y0 - y1));
-    cols.push(c.r, c.g, c.b);
-  }
-  sky.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+    return out.set(s0).lerp(new THREE.Color(s1), (y0 - y) / (y0 - y1));
+  };
+  const skyCols = new Float32Array(sky.attributes.position.count * 3);
+  sky.setAttribute('color', new THREE.BufferAttribute(skyCols, 3));
   const skyMat = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide });
   envScene.add(new THREE.Mesh(sky, skyMat));
-  const panel = (az, el, w, h, mat, dist = 12) => { // азимут 0 — со стороны зрителя
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat);
+  const panel = (az, el, w, h, dist) => { // азимут 0 — со стороны зрителя
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }));
     const a = THREE.MathUtils.degToRad(az), e = THREE.MathUtils.degToRad(el);
     m.position.set(Math.sin(a) * Math.cos(e) * dist, Math.sin(e) * dist, Math.cos(a) * Math.cos(e) * dist);
-    m.lookAt(0, 0, 0); envScene.add(m); return m;
+    m.lookAt(0, 0, 0); envScene.add(m); return m.material;
   };
-  const lit = (k) => new THREE.MeshBasicMaterial({ color: new THREE.Color(k, k, k * 0.97), side: THREE.DoubleSide });
-  const soft = lit(2.2), strip = lit(4.5), top = lit(6);
-  panel(20, 72, 3.4, 3.4, top);                 // верхний свет витрины
-  panel(-60, 22, 6, 9, soft);                   // большой софтбокс слева
-  panel(130, 18, 1.1, 10, strip); panel(-150, 14, 0.9, 9, strip); // контровые полосы
-  // тёмные карточки по бокам, как у предметного фотографа: из них тёмные линии рёбер на светлом фоне
-  const grey = new THREE.MeshBasicMaterial({ color: new THREE.Color('#5E6869'), side: THREE.DoubleSide });
-  panel(70, 8, 1, 14, grey, 13); panel(-95, 6, 0.9, 14, grey, 13); panel(165, 10, 1.2, 14, grey, 13); panel(-160, 30, 3, 2.4, grey, 13);
-  panel(-25, 4, 6, 3, new THREE.MeshBasicMaterial({ color: new THREE.Color('#9C7C4D').multiplyScalar(1.5), side: THREE.DoubleSide }), 12.5);
-  const sunMat = lit(5); // окно за солнцем: утром слева, днём сверху, вечером справа и тёплое
-  const sun = new THREE.Mesh(new THREE.PlaneGeometry(4, 4), sunMat);
+  const WHITE = new THREE.Color(1, 1, 1), BRONZE = new THREE.Color('#9C7C4D'), GREYC = new THREE.Color('#5E6869'), DARK = new THREE.Color('#0E1718');
+  // [материал, цвет, яркость, набор (0 витрина, 1 ювелирный), окрашивать ли светом часа]
+  const lamps = [];
+  const add = (mat, col, k, set, lit) => lamps.push([mat, col, k, set, lit]);
+  add(panel(20, 72, 3.4, 3.4, 12), WHITE, 6, 0, 1);
+  add(panel(-60, 22, 6, 9, 12), WHITE, 2.2, 0, 1);
+  add(panel(130, 18, 1.1, 10, 12), WHITE, 4.5, 0, 1); add(panel(-150, 14, 0.9, 9, 12), WHITE, 4.5, 0, 1);
+  [[70, 8, 1, 14], [-95, 6, 0.9, 14], [165, 10, 1.2, 14], [-160, 30, 3, 2.4]].forEach(([az, el, w, h]) => add(panel(az, el, w, h, 13), GREYC, 1, 0, 0));
+  add(panel(-25, 4, 6, 3, 12.5), BRONZE, 1.5, 0, 0);
+  [[-40, 38, 3.2, 6], [35, 52, 2.2, 7], [150, 40, 4, 5], [-140, 55, 2.4, 6], [95, 25, 1.4, 6], [-95, 22, 1.2, 7], [0, 78, 6, 2.2], [200, 18, 5, 1.4]]
+    .forEach(([az, el, w, h]) => add(panel(az, el, w, h, 11.5), WHITE, 9, 1, 1));
+  [[0, 40, 4.4, 10], [-75, 45, 3.6, 9], [70, 48, 3.6, 9], [180, 62, 5, 7], [120, 20, 3.2, 6], [-120, 30, 3.2, 7], [-20, 70, 2.4, 6], [40, 22, 2.4, 6]]
+    .forEach(([az, el, w, h]) => add(panel(az, el, w, h, 12.8), DARK, 1, 1, 0));
+  [[-20, 12, 5, 2.4], [110, 60, 2.4, 3.6], [-160, 40, 3, 3]].forEach(([az, el, w, h]) => add(panel(az, el, w, h, 12.2), BRONZE, 3.2, 1, 0));
+  const sunMat = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }); // окно за солнцем: утром слева, днём сверху, вечером справа
+  const sun = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 3.2), sunMat);
   envScene.add(sun);
   const pmrem = new THREE.PMREMGenerator(renderer);
   let envRT = null;
@@ -172,73 +254,149 @@ export function createGem(canvas, { reduced = false, mobile = false } = {}) {
   const group = new THREE.Group();
   scene.add(group);
 
-  const geo = new ConvexGeometry(stonePoints(V.shape));
-  geo.computeBoundingBox();
-  const k0 = HEIGHT / (geo.boundingBox.max.y - geo.boundingBox.min.y);
-  geo.center();
-  geo.scale(k0, k0, k0);
-  // плоскости граней из оболочки: треугольники одной грани сливаются в одну плоскость
-  const planes = [];
-  {
-    const p = geo.attributes.position, a = new THREE.Vector3(), b = new THREE.Vector3(), d = new THREE.Vector3(), nn = new THREE.Vector3();
-    for (let i = 0; i < p.count; i += 3) {
-      a.fromBufferAttribute(p, i); b.fromBufferAttribute(p, i + 1); d.fromBufferAttribute(p, i + 2);
-      nn.subVectors(b, a).cross(d.sub(a)).normalize();
-      const w = nn.dot(a);
-      if (!planes.some((q) => q.x * nn.x + q.y * nn.y + q.z * nn.z > 0.99999 && Math.abs(q.w - w) < 1e-4)) planes.push(new THREE.Vector4(nn.x, nn.y, nn.z, w));
-    }
-  }
+  const planes = Array.from({ length: MAXP }, () => new THREE.Vector4());
   const uni = {
-    uPlanes: { value: planes }, uEnv: { value: null }, uCam: { value: new THREE.Vector3() }, uRot: { value: new THREE.Matrix3() },
-    uIor: { value: V.ior }, uAbs: { value: new THREE.Vector3(...V.abs).divideScalar(k0) }, // поглощение задано в размерах до масштаба
-    uRough: { value: V.rough }, uFrost: { value: V.frost },
+    uPlanes: { value: planes }, uNP: { value: 0 }, uB: { value: 3 }, uEnv: { value: null },
+    uCam: { value: new THREE.Vector3() }, uRot: { value: new THREE.Matrix3() },
+    uIor: { value: 1.52 }, uDisp: { value: 0 }, uRough: { value: 0.05 }, uFrost: { value: 0 }, uMilk: { value: 0 }, uLeft: { value: 0.35 },
+    uAbs: { value: new THREE.Vector3() },
   };
   let mat = null;
-  const gem = new THREE.Mesh(geo);
+  const gem = new THREE.Mesh(new THREE.BufferGeometry());
   gem.position.y = 0.1;
   group.add(gem);
-  // тонкие светлые рёбра: огранка читается, как у резного стекла
-  gem.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 1),
-    new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.32 })));
+  const edgeMat = new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.32 });
+  const edges = new THREE.LineSegments(new THREE.BufferGeometry(), edgeMat);
+  gem.add(edges);
+  const sparkMat = new THREE.ShaderMaterial({
+    uniforms: { uL: { value: [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()] }, uSize: { value: 1 }, uOn: { value: 0 }, uCol: { value: new THREE.Color(1, 0.98, 0.94) } },
+    vertexShader: SPARK_VERT, fragmentShader: SPARK_FRAG, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false,
+  });
+  const sparks = new THREE.Points(new THREE.BufferGeometry(), sparkMat);
+  sparks.renderOrder = 2;
+  gem.add(sparks);
+  const dirOf = (az, el) => { const a = THREE.MathUtils.degToRad(az), e = THREE.MathUtils.degToRad(el); return new THREE.Vector3(Math.sin(a) * Math.cos(e), Math.sin(e), Math.cos(a) * Math.cos(e)); };
+  sparkMat.uniforms.uL.value[0].copy(dirOf(-40, 38));
+  sparkMat.uniforms.uL.value[1].copy(dirOf(35, 52));
 
-  // мягкая тень под остриём
+  // мягкая тень под камнем
   const sc = document.createElement('canvas'); sc.width = sc.height = 256;
   const sx = sc.getContext('2d');
   const gr = sx.createRadialGradient(128, 128, 4, 128, 128, 126);
-  gr.addColorStop(0, 'rgba(60,52,40,0.22)'); gr.addColorStop(0.55, 'rgba(60,52,40,0.07)'); gr.addColorStop(1, 'rgba(60,52,40,0)');
+  gr.addColorStop(0, 'rgba(60,52,40,0.24)'); gr.addColorStop(0.55, 'rgba(60,52,40,0.08)'); gr.addColorStop(1, 'rgba(60,52,40,0)');
   sx.fillStyle = gr; sx.fillRect(0, 0, 256, 256);
-  const shadow = new THREE.Mesh(new THREE.PlaneGeometry(2, 1.1), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, depthWrite: false }));
-  shadow.rotation.x = -Math.PI / 2; shadow.position.y = gem.position.y - HEIGHT / 2 - 0.12;
+  const shadow = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, depthWrite: false }));
+  shadow.rotation.x = -Math.PI / 2;
   group.add(shadow);
+
+  let scaledH = HEIGHT;
+  function buildShape() {
+    const geo = new ConvexGeometry(stonePoints(P));
+    geo.computeBoundingBox();
+    const bb = geo.boundingBox, h = bb.max.y - bb.min.y, w = bb.max.x - bb.min.x;
+    const k0 = HEIGHT / Math.max(h, w);
+    geo.center(); geo.scale(k0, k0, k0);
+    scaledH = h * k0;
+    // плоскости граней из оболочки: треугольники одной грани сливаются в одну плоскость
+    const pos = geo.attributes.position, a = new THREE.Vector3(), b = new THREE.Vector3(), d = new THREE.Vector3(), nn = new THREE.Vector3();
+    let np = 0;
+    for (let i = 0; i < pos.count && np < MAXP; i += 3) {
+      a.fromBufferAttribute(pos, i); b.fromBufferAttribute(pos, i + 1); d.fromBufferAttribute(pos, i + 2);
+      nn.subVectors(b, a).cross(d.sub(a)).normalize();
+      const pw = nn.dot(a);
+      let seen = false;
+      for (let j = 0; j < np; j++) { const q = planes[j]; if (q.x * nn.x + q.y * nn.y + q.z * nn.z > 0.99999 && Math.abs(q.w - pw) < 1e-4) { seen = true; break; } }
+      if (!seen) planes[np++].set(nn.x, nn.y, nn.z, pw);
+    }
+    uni.uNP.value = np;
+    // искры: вершины верхней половины, нормаль как среднее соседних граней
+    const sp = [], sn = [], uniq = [], v = new THREE.Vector3(), top = scaledH / 2;
+    for (let i = 0; i < pos.count; i++) {
+      v.fromBufferAttribute(pos, i);
+      if (v.y < top - scaledH * 0.45 || uniq.some((u) => u.distanceToSquared(v) < 1e-6)) continue;
+      uniq.push(v.clone());
+      const nv = new THREE.Vector3();
+      for (let j = 0; j < np; j++) { const q = planes[j]; if (Math.abs(q.x * v.x + q.y * v.y + q.z * v.z - q.w) < 1e-4) nv.x += q.x, nv.y += q.y, nv.z += q.z; }
+      nv.normalize(); sp.push(v.x, v.y, v.z); sn.push(nv.x, nv.y, nv.z);
+    }
+    const sg = new THREE.BufferGeometry();
+    sg.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3));
+    sg.setAttribute('aN', new THREE.Float32BufferAttribute(sn, 3));
+    sparks.geometry.dispose(); sparks.geometry = sg;
+    edges.geometry.dispose(); edges.geometry = new THREE.EdgesGeometry(geo, 1);
+    gem.geometry.dispose(); gem.geometry = geo;
+    shadow.position.y = gem.position.y - scaledH / 2 - 0.12;
+    const sw = Math.min(w * k0, 2.4) * 1.3; shadow.scale.set(sw, sw * 0.55, 1);
+    return k0;
+  }
+  function applyMaterial(k0) {
+    const g = P.gloss, smoke = new THREE.Color(0.5, 0.5, 0.5).lerp(new THREE.Color(1, 0.65, 0.65), P.tone);
+    uni.uIor.value = 1.52 + 0.9 * g;            // от стекла до алмаза
+    uni.uDisp.value = g * g;                    // радуга появляется только у самого блестящего
+    uni.uRough.value = 0.05 * (1 - g);
+    uni.uLeft.value = 0.35 * (1 - g);
+    uni.uFrost.value = 0.5 * P.frost;
+    uni.uMilk.value = 0.45 * P.frost;
+    uni.uB.value = Math.min(Math.round(3 + 3 * g), mobile ? 4 : 6);
+    // поглощение задано на радиус 1, в шейдере длины уже в масштабе сцены
+    uni.uAbs.value.set(0.05, 0.03, 0.018).addScaledVector(new THREE.Vector3(smoke.r, smoke.g, smoke.b), 0.8 * P.sat).divideScalar(k0);
+    edgeMat.opacity = 0.32 * (1 - g) * (P.cut ? 1 : 0.6);
+    edges.visible = edgeMat.opacity > 0.01;
+    sparkMat.uniforms.uOn.value = g * g;
+    sparks.visible = g > 0.05;
+  }
+  let shapeKey = '', k0 = 1, envGloss = -1, envHour = -1;
+  function applyParams() {
+    const sk = [P.cut, P.n, P.hw, P.crown, P.pav].join();
+    if (sk !== shapeKey) { shapeKey = sk; k0 = buildShape(); }
+    applyMaterial(k0);
+  }
+  applyParams();
 
   // цель задаётся снаружи, сцена догоняет её мягко
   const target = { x: 0.4, y: 0.0, s: 1, rot: 0, tilt: 0.3, hour: 1, alpha: 1, grid: 0 };
   let cur = null; // первый кадр встаёт сразу туда, куда попросили, без выезда из умолчаний
-  let W = 1, H = 1, halfW = 1, halfH = 1, running = true, t0 = performance.now(), visible = true;
+  let W = 1, H = 1, halfW = 1, halfH = 1, sparkPx = 1, running = true, last = performance.now(), idle = 0, visible = true;
 
   function resize() {
     W = window.innerWidth; H = window.innerHeight;
     renderer.setSize(W, H, false);
     camera.aspect = W / H; camera.updateProjectionMatrix();
     halfH = Math.tan(THREE.MathUtils.degToRad(15)) * 9; halfW = halfH * camera.aspect;
+    sparkPx = H * dpr / (2 * halfH / 9);
   }
   resize();
   window.addEventListener('resize', resize);
 
-  const tmpC = new THREE.Color(), white = new THREE.Color(1, 1, 1);
-  let envHour = -1;
-  function applyHour(h) {
+  const tmpC = new THREE.Color(), c2 = new THREE.Color(), c3 = new THREE.Color(), skyMid = new THREE.Color('#C9D0CD');
+  let lastBake = 0;
+  function applyEnv(h, now) {
     const i = Math.min(1, Math.floor(h)), f = h - i;
     const a = HOURS[i], b = HOURS[Math.min(2, i + 1)];
     bg.copy(a.bg).lerp(b.bg, f);
-    if (Math.abs(h - envHour) < 0.01) return;
-    envHour = h;
+    const g = P.gloss;
+    if (Math.abs(h - envHour) < 0.01 && Math.abs(g - envGloss) < 0.005) return;
+    if (envRT && now - lastBake < 90) return; // ползунок тянут: карту не чаще десяти раз в секунду
+    envHour = h; envGloss = g; lastBake = now;
     tmpC.copy(a.key).lerp(b.key, f);
+    const pos = sky.attributes.position;
+    for (let v = 0; v < pos.count; v++) {
+      const y = pos.getY(v) / 20;
+      grad(SKY_CALM, y, c2).lerp(grad(SKY_JEWEL, y, c3), g).toArray(skyCols, v * 3);
+    }
+    sky.attributes.color.needsUpdate = true;
+    for (const [m, col, k, set, lit] of lamps) {
+      const on = set ? g : 1 - g; // лампа своего набора в полную силу, чужого гаснет до цвета свода
+      c2.copy(col).multiplyScalar(k);
+      if (lit) c2.multiply(c3.copy(tmpC).lerp(WHITE, 0.55));
+      m.color.copy(skyMid).lerp(c2, on);
+    }
     sun.position.set(THREE.MathUtils.lerp(a.kx, b.kx, f), THREE.MathUtils.lerp(a.ky, b.ky, f), 5).setLength(11.5);
     sun.lookAt(0, 0, 0);
-    sunMat.color.copy(tmpC).multiplyScalar(5);
-    for (const [m, k] of [[soft, 2.2], [strip, 4.5], [top, 6]]) m.color.copy(tmpC).lerp(white, 0.55).multiplyScalar(k);
+    sunMat.color.copy(tmpC).multiplyScalar(5 + 4 * g);
     skyMat.color.copy(a.sky).lerp(b.sky, f);
+    sparkMat.uniforms.uL.value[2].copy(sun.position).normalize();
+    sparkMat.uniforms.uCol.value.copy(tmpC).lerp(WHITE, 0.6);
     const rt = pmrem.fromScene(envScene, 0, 0.1, 100);
     if (envRT) envRT.dispose();
     envRT = rt;
@@ -247,7 +405,7 @@ export function createGem(canvas, { reduced = false, mobile = false } = {}) {
       const hgt = rt.texture.image.height, maxMip = Math.log2(hgt) - 2;
       mat = new THREE.ShaderMaterial({
         defines: {
-          NP: planes.length, BOUNCES: V.bounces, ENVMAP_TYPE_CUBE_UV: '',
+          ENVMAP_TYPE_CUBE_UV: '',
           CUBEUV_TEXEL_WIDTH: (1 / (3 * Math.max(Math.pow(2, maxMip), 7 * 16))).toFixed(8),
           CUBEUV_TEXEL_HEIGHT: (1 / hgt).toFixed(8), CUBEUV_MAX_MIP: maxMip.toFixed(1),
         },
@@ -264,20 +422,23 @@ export function createGem(canvas, { reduced = false, mobile = false } = {}) {
     if (!cur) cur = { ...target };
     const k = reduced ? 1 : 0.08;
     for (const p in target) cur[p] += (target[p] - cur[p]) * k;
+    const dt = Math.min(100, Math.max(0, now - last)); last = now;
     if (cur.alpha < 0.01 && target.alpha < 0.01) {
       if (visible) { canvas.style.opacity = '0'; visible = false; }
       return;
     }
     if (!visible) { visible = true; }
     canvas.style.opacity = cur.alpha.toFixed(3);
-    // медленный поворот вокруг оси камня, полный оборот примерно за шесть минут
-    const idle = reduced ? 0 : (now - t0) * 0.000018;
+    if (!reduced) idle += dt * P.speed * 0.00008; // speed 1: оборот примерно за 80 секунд
     group.position.set(cur.x * halfW, cur.y * halfH, 0);
     group.scale.setScalar(cur.s);
-    // 0.3 — стартовый ракурс; в нём же камень стоит при reduced-motion (прокрутка его тогда не крутит)
-    group.rotation.y = 0.3 + (reduced ? 0 : cur.rot + idle);
-    group.rotation.x = 0.15 + (reduced ? 0.9 : cur.tilt) * 0.2; // чуть сверху: видна площадка и весь павильон
-    applyHour(cur.hour);
+    sparkMat.uniforms.uSize.value = 0.5 * cur.s * sparkPx;
+    // 0.35 — стартовый ракурс; при reduced-motion камень в нём и стоит (прокрутка его тогда не крутит)
+    group.rotation.y = 0.35 + (reduced ? 0 : cur.rot + idle);
+    // плоский камень видно сверху сильнее, вытянутый почти сбоку: читаются площадка и павильон
+    const tall = clamp((P.hw - 0.6) / 1.3, 0, 1), t = reduced ? 0.9 : cur.tilt;
+    group.rotation.x = THREE.MathUtils.lerp(0.2 + t * 0.25, 0.15 + t * 0.2, tall);
+    applyEnv(cur.hour, now);
     gem.updateWorldMatrix(true, false);
     inv.copy(gem.matrixWorld).invert();
     uni.uCam.value.copy(camObj.copy(camera.position).applyMatrix4(inv));
@@ -287,7 +448,10 @@ export function createGem(canvas, { reduced = false, mobile = false } = {}) {
 
   return {
     target,
-    start() { running = true; requestAnimationFrame(frame); },
+    start() { running = true; last = performance.now(); requestAnimationFrame(frame); },
     stop() { running = false; },
+    // для конструктора: поменять часть параметров, форма перестраивается без перекомпиляции шейдера
+    set(p) { P = cleanParams({ ...P, ...p }); applyParams(); },
+    get params() { return { ...P }; },
   };
 }

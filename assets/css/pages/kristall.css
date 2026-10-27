@@ -1,0 +1,49 @@
+/* Служебная страница kristall.html: конструктор кристалла. Камень на весь экран, панель справа,
+   на телефоне снизу и сворачивается в полосу «Настройки». */
+html,body.kr{height:100%;overflow:hidden;overscroll-behavior:none}
+.kr__gem{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;display:block;touch-action:none;cursor:grab}
+.kr__gem:active{cursor:grabbing}
+.kr__top{position:fixed;left:var(--gut);top:20px;display:flex;align-items:baseline;gap:14px;pointer-events:none;z-index:2}
+.kr__logo{font:400 22px/1 var(--ff-d);letter-spacing:.32em;color:var(--ink);text-decoration:none;pointer-events:auto}
+.kr__title{font:italic 400 15px/1 var(--ff-t);color:var(--muted)}
+.kr__nogl{position:fixed;left:var(--gut);top:80px;max-width:30ch;color:var(--ink-2)}
+
+.kr__panel{position:fixed;z-index:3;top:0;right:0;bottom:0;width:340px;background:rgba(251,250,247,.94);border-left:1px solid var(--line);display:flex;flex-direction:column}
+.kr__handle{display:none}
+.kr__body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:22px 24px 28px;-webkit-overflow-scrolling:touch}
+.kr__group{margin-bottom:18px}
+.kr__label{margin:0 0 8px;font:500 11px/1.2 var(--ff-t);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.kr__seg,.kr__presets{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line-2)}
+.kr__presets{grid-template-columns:repeat(4,1fr)}
+.kr__seg button,.kr__presets button{min-height:44px;padding:0 6px;border:0;border-left:1px solid var(--line-2);background:transparent;color:var(--ink-2);font:500 13px/1.1 var(--ff-t);cursor:pointer}
+.kr__seg button:first-child,.kr__presets button:first-child{border-left:0}
+.kr__seg button[aria-pressed="true"],.kr__presets button[aria-pressed="true"]{background:var(--bronze);color:var(--surface)}
+.kr__sl{display:block;margin:0 0 14px}
+.kr__sl-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:14px;line-height:1.3;color:var(--ink-2)}
+.kr__sl-h output{font-variant-numeric:tabular-nums;color:var(--muted);font-size:13px}
+.kr__sl-ends{display:flex;justify-content:space-between;font-size:11px;line-height:1;color:var(--muted);margin-top:-4px}
+.kr input[type=range]{-webkit-appearance:none;appearance:none;display:block;width:100%;height:40px;margin:0;background:transparent;cursor:pointer}
+.kr input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--line-2)}
+.kr input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;margin-top:-11px;border-radius:50%;background:var(--surface);border:1px solid var(--bronze);box-shadow:0 1px 3px rgba(26,28,30,.15)}
+.kr input[type=range]::-moz-range-track{height:2px;background:var(--line-2)}
+.kr input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--surface);border:1px solid var(--bronze)}
+.kr input[type=range]:focus-visible{outline:1px solid var(--bronze);outline-offset:2px}
+.kr__copy{margin-top:18px}
+.kr__copy .btn{width:100%}
+.kr__done{min-height:1.4em;margin:8px 0 0;font-size:13px;color:var(--muted)}
+.kr__out{width:100%;min-height:44px;margin-top:4px;padding:0 10px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);font:400 13px/1 var(--ff-t)}
+
+/* телефон: панель снизу, сворачивается в полосу; камень всегда над ней */
+@media (max-width:700px){
+  .kr__top{top:14px}
+  .kr__panel{top:auto;left:0;width:auto;height:min(56vh,480px);border-left:0;border-top:1px solid var(--line);transition:transform .35s var(--ease-out)}
+  .kr__panel[data-open="false"]{transform:translateY(calc(100% - 52px - env(safe-area-inset-bottom)))}
+  .kr__handle{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:52px;padding:0 var(--gut);border:0;border-bottom:1px solid var(--line);background:transparent;font:500 12px/1 var(--ff-t);letter-spacing:.16em;text-transform:uppercase;color:var(--ink);cursor:pointer}
+  .kr__handle i{width:10px;height:10px;border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);transform:rotate(45deg) translateY(-3px);transition:transform .3s}
+  .kr__panel[data-open="false"] .kr__handle i{transform:rotate(-135deg) translateY(-3px)}
+  .kr__body{padding:16px var(--gut) calc(24px + env(safe-area-inset-bottom))}
+  .kr input[type=range]{height:44px}
+  .kr input[type=range]::-webkit-slider-thumb{width:28px;height:28px;margin-top:-13px}
+  .kr input[type=range]::-moz-range-thumb{width:28px;height:28px}
+}
+@media (prefers-reduced-motion:reduce){.kr__panel{transition:none}}
