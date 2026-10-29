@@ -328,10 +328,12 @@ const sil = (code) => {
   for (const P of polys) { const p = document.createElementNS(NS, 'polygon'); p.setAttribute('points', P.map((q) => q.join(',')).join(' ')); s.append(p); }
   return s;
 };
+// плашка шириной 170–330 px: 480 и 640 вместо одного 900 (втрое шире плашки на компьютере)
+const NB_SIZES = '(max-width: 980px) 50vw, (max-width: 1440px) 22vw, 330px';
 VILLAS.filter((n) => n.code !== v.code).forEach((n) => {
-  const a = document.createElement('a');
+  const a = document.createElement('a'), b = `assets/img/villy/${n.code}-ext`;
   a.className = 'vnb__a'; a.href = `villa.html?v=${n.code}`;
-  a.innerHTML = `<span class="vnb__ph"><img src="${imgSrc(n.code + '-ext', true)}" alt="" loading="lazy" decoding="async"></span>`
+  a.innerHTML = `<span class="vnb__ph"><img src="${imgSrc(n.code + '-ext', true)}" srcset="${b}-480.webp 480w, ${b}-640.webp 640w, ${imgSrc(n.code + '-ext', true)} 900w" sizes="${NB_SIZES}" alt="" loading="lazy" decoding="async"></span>`
     + `<span class="vnb__meta"><span class="tech">Лист ${n.sheet}</span><span class="d2">${n.name}</span><i class="vnb__tick" aria-hidden="true"></i></span>`;
   $('.vnb__meta', a).insertBefore(sil(n.code), $('.vnb__tick', a));
   nb.append(a);

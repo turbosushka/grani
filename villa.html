@@ -76,11 +76,13 @@
 
 <!-- Экран 2. Фото снаружи с точками на фасаде, строка характера, штамп и цепочка фактов (DIZAJN 3.4).
      Строку, штамп, цепочку и точки подставляет pages/villa.js по ?v=. Фото ставит скрипт ниже
-     по коду, который уже записал скрипт пролёта. -->
+     по коду, который уже записал скрипт пролёта. Ставит на DOMContentLoaded: к этому моменту модуль
+     уже закрепил пролёт, фото стоит на 2–3 экрана ниже, и loading="lazy" не тянет его с первой
+     загрузкой (раньше качалось сразу, 0,07–0,4 МБ). Компьютер: 1440 или 1920 по ширине экрана. -->
 <section class="vhero" id="villa">
   <div class="vhero__ph" id="vPh">
     <img class="vhero__img" id="vImg" alt="" loading="lazy" decoding="async">
-    <script>document.getElementById('vImg').src='assets/img/villy/'+document.documentElement.getAttribute('data-v')+'-ext'+(matchMedia('(max-width:760px)').matches?'-m':'')+'.webp';</script>
+    <script>(function(){var i=document.getElementById('vImg'),b='assets/img/villy/'+document.documentElement.getAttribute('data-v')+'-ext',m=matchMedia('(max-width:760px)').matches;document.addEventListener('DOMContentLoaded',function(){if(!m){i.sizes='100vw';i.srcset=b+'-1440.webp 1440w, '+b+'.webp 1920w';}i.src=b+(m?'-m':'')+'.webp';});})();</script>
     <noscript><img class="vhero__img" src="assets/img/villy/kvarc-ext.webp" alt=""></noscript>
     <div class="vhs" id="vHs"></div>
   </div>
